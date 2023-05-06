@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express"
+import { STATUS_CODE } from "../enum/enumStatusCode"
 
 export const autorizationMiddleware = (req: Request, res: Response, next: NextFunction) =>{
     const auth = 'Basic ' + btoa('admin:qwerty')
@@ -6,7 +7,7 @@ export const autorizationMiddleware = (req: Request, res: Response, next: NextFu
     if(req.headers.authorization === auth){
         next()
     }else{
-        res.sendStatus(401)
+        res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
     }
     
 }
