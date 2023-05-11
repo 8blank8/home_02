@@ -11,7 +11,7 @@ export const validationCreateOrUpdatePost = [
     body('content').isString().trim().isLength({min: 1, max: 1000}).withMessage('content length min 1 max 1000'),
     body('blogId').notEmpty().withMessage('blogId is required'),
     body('blogId').isString().trim().withMessage('blogId must be string'),
-    body('blogId').custom(id=> blogsRepository.findBlogsById(id) !== undefined).withMessage('blog not found'),
+    body('blogId').custom(async (id)=> await blogsRepository.findBlogsById(id) === null).withMessage('blog not found'),
     inputValidationMiddleware
 ]
 
