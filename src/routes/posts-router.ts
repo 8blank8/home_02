@@ -7,15 +7,15 @@ import { STATUS_CODE } from "../enum/enumStatusCode";
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', (req: Request, res: Response)=>{
-    const posts = postsRepository.findPosts()
+postsRouter.get('/', async (req: Request, res: Response)=>{
+    const posts = await postsRepository.findPosts()
     res.status(STATUS_CODE.OK_200).send(posts)
 })
 
-postsRouter.get('/:id', (req: Request, res: Response)=>{
+postsRouter.get('/:id', async (req: Request, res: Response)=>{
     const {id} = req.params
 
-    const post = postsRepository.findPostById(id)
+    const post = await postsRepository.findPostById(id)
 
     if(post){
         res.status(STATUS_CODE.OK_200).send(post)
@@ -27,10 +27,10 @@ postsRouter.get('/:id', (req: Request, res: Response)=>{
 postsRouter.post('/', 
 autorizationMiddleware,
 validationCreateOrUpdatePost,
-(req: Request, res: Response)=>{
+async (req: Request, res: Response)=>{
     const {title, shortDescription, content, blogId} = req.body
 
-    const createdPost = postsRepository.createPost({title, shortDescription, content, blogId})
+    const createdPost = await postsRepository.createPost({title, shortDescription, content, blogId})
 
     res.status(STATUS_CODE.CREATED_201).send(createdPost)
 })
@@ -38,11 +38,11 @@ validationCreateOrUpdatePost,
 postsRouter.put('/:id', 
 autorizationMiddleware,
 validationCreateOrUpdatePost,
-(req: Request, res: Response)=>{
+async (req: Request, res: Response)=>{
     const {title, shortDescription, content, blogId} = req.body
     const {id} = req.params
 
-    const isUpadate = postsRepository.updatePost({id, title, shortDescription, content, blogId})
+    const isUpadate = await postsRepository.updatePost({id, title, shortDescription, content, blogId})
 
     if(isUpadate){
         res.sendStatus(STATUS_CODE.NO_CONTENT_204)
@@ -53,10 +53,10 @@ validationCreateOrUpdatePost,
 
 postsRouter.delete('/:id', 
 autorizationMiddleware,
-(req: Request, res: Response)=>{
+async (req: Request, res: Response)=>{
     const {id} = req.params
 
-    const isDelete = postsRepository.deletePost(id)
+    const isDelete = await postsRepository.deletePost(id)
 
     if(isDelete){
         res.sendStatus(STATUS_CODE.NO_CONTENT_204)

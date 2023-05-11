@@ -1,66 +1,54 @@
 import { PostsType } from "../models/PostsModel"
-import { blogsRepository } from "./blogs-repository"
 import { PostCreate } from "../models/PostCreateModel"
 import { PostUpdateType } from "../models/PostUpdateModel"
+import { collectionBlog, collectionPost } from "../db/db"
 
-const posts: PostsType[] = [{
-    id: "string",
-    title: "one",
-    shortDescription: "fakkajkajsue",
-    content: "baskjbfkasbfk",
-    blogId: "string",
-    blogName: "Vladimir"
-}]
 
 export const postsRepository = {
-    findPosts(){
-        return posts
+    async findPosts(){
+        return collectionPost.find({}).toArray()
     },
 
-    findPostById(id: string){
-        const post = posts.find(item => item.id == id)
-        return post
+    async findPostById(id: string){
+        return collectionPost.findOne({id})
     },
 
-    createPost(post: PostCreate){
+    async createPost(post: PostCreate){
+        const blog = await collectionBlog.findOne({id: post.blogId})
+
         const createdPost: PostsType= {
             id: String(+(new Date())),
-            blogName: blogsRepository.findBlogsById(post.blogId)?.name,
+            blogName: blog?.name,
+            createdAt: new Date().toISOString(),
             ...post
         }
 
-        posts.push(createdPost)
+        await collectionPost.insertOne(createdPost)
         
         return createdPost
     },
 
-    updatePost(post: PostUpdateType){
-        const updatePost = posts.find(item => item.id == post.id)
+    async updatePost(post: PostUpdateType){
 
-        if(updatePost){
-            updatePost.title = post.title
-            updatePost.shortDescription = post.shortDescription
-            updatePost.content = post.content,
-            updatePost.blogId = post.blogId
-            return true
-        }else{
-            return false
-        }
+        const res = await collectionPost.updateOne({id: post.id}, {$set: {
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            blogId: post.blogId
+        }})
+
+        return res.matchedCount === 1
     },
 
-    deletePost(id: string){
-        const post = posts.find(item => item.id == id)
+    async deletePost(id: string){
 
-        if(post){
-            posts.splice(posts.indexOf(post), 1)
-            return true
-        }else{
-            return false
-        }
+        const res = await collectionPost.deleteOne({id})
+        
+        return res.deletedCount === 1
     },
 
-    deleteAllPosts(){
-        posts.length = 0
+    async deleteAllPosts(){
+        await collectionPost.deleteMany({})
         return true
     }
 }
