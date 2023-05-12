@@ -10,7 +10,6 @@ console.log(mongoUri)
 
 if(!mongoUri){ 
     throw Error('Connection failed')
-
 } 
  
 export const client = new MongoClient(mongoUri);
