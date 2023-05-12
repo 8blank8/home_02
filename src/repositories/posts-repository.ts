@@ -1,17 +1,20 @@
 import { PostsType } from "../models/PostsModel"
 import { PostCreate } from "../models/PostCreateModel"
 import { PostUpdateType } from "../models/PostUpdateModel"
-import { client } from "../db/db"
 import { collectionBlog, collectionPost } from "../db/db"
 
 
+const optionsCollection = {
+    projection: {_id: 0}
+} 
+
 export const postsRepository = {
     async findPosts(){
-        return collectionPost.find({}).toArray()
+        return collectionPost.find({}, optionsCollection).toArray()
     },
 
     async findPostById(id: string){
-        return collectionPost.findOne({id})
+        return collectionPost.findOne({id}, optionsCollection)
     },
 
     async createPost(post: PostCreate){
@@ -24,9 +27,11 @@ export const postsRepository = {
             ...post
         }
 
+        const resPost = JSON.parse(JSON.stringify(createdPost))
+
         await collectionPost.insertOne(createdPost)
         
-        return createdPost
+        return resPost
     },
 
     async updatePost(post: PostUpdateType){
