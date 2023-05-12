@@ -16,7 +16,7 @@ export const validationCreateOrUpdatePost = [
         if(isBlog === null){
             throw Error('blog not found')
         } 
-    }).withMessage('blog not found'),
+    }),
     inputValidationMiddleware
 ]
 
