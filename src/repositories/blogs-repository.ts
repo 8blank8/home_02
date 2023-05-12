@@ -4,15 +4,17 @@ import { BlogUpdateType } from "../models/BlogUpdateModel";
 import { collectionBlog } from "../db/db";
 
 
-const blogs: BlogsType[] = []
+const optionsCollection = {
+    projection: {_id: 0}
+} 
 
 export const blogsRepository = {
     async findBlogs(){
-        return collectionBlog.find({}).toArray()
+        return collectionBlog.find({}, optionsCollection).toArray()
     },
 
     async findBlogsById(id: string){
-        const res = await collectionBlog.findOne({id})
+        const res = await collectionBlog.findOne({id}, optionsCollection )
         return res
     },
 
