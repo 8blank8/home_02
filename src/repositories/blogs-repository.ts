@@ -26,9 +26,11 @@ export const blogsRepository = {
             ...blog
         }
 
+        const blogRes = createdBlog
+
         await collectionBlog.insertOne(createdBlog)
 
-        return createdBlog
+        return blogRes
     },
 
     async updateBlog(blog: BlogUpdateType){
