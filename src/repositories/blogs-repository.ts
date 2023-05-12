@@ -18,7 +18,7 @@ export const blogsRepository = {
         return res
     },
 
-    async createBlog(blog: BlogCrateType): Promise<BlogsType>{
+    async createBlog(blog: BlogCrateType){
         const createdBlog: BlogsType = {
             id: String(+(new Date())),
             createdAt: new Date().toISOString(),
@@ -26,9 +26,11 @@ export const blogsRepository = {
             ...blog
         }
 
+        const resBlog = JSON.parse(JSON.stringify(createdBlog))
+
         await collectionBlog.insertOne(createdBlog)
 
-        return createdBlog
+        return resBlog
     },
 
     async updateBlog(blog: BlogUpdateType){
