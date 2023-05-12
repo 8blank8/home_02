@@ -1,23 +1,22 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from 'dotenv';
 
 
 dotenv.config()
+// 'mongodb://0.0.0.0:27017'
 
-const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/"
-console.log(mongoUri)
+const mongoUri = process.env.MONGO_URL
+console.log(mongoUri) 
 
-const client  = new MongoClient(mongoUri)
-
-const blogDB = client.db('BlogPlatform')
-export const collectionBlog = blogDB.collection('blogs')
-export const collectionPost = blogDB.collection('posts')
+if(!mongoUri){
+    throw Error('Connection failed')
+} 
+ 
+export const client = new MongoClient(mongoUri);
 
 export const runDb = async () => {
     try{
         await client.connect()
-
-        await client.db('test').command({ping: 1})
         console.log('Connected successfully to mongo server')
     } catch {
         console.log('Connection failed')
@@ -25,3 +24,9 @@ export const runDb = async () => {
         await client.close()
     }
 }
+
+const blogDB = client.db('BlogPlatform')
+export const collectionPost = blogDB.collection('posts')
+export const collectionBlog = blogDB.collection('blogs')
+
+

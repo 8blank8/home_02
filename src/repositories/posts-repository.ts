@@ -1,6 +1,7 @@
 import { PostsType } from "../models/PostsModel"
 import { PostCreate } from "../models/PostCreateModel"
 import { PostUpdateType } from "../models/PostUpdateModel"
+import { client } from "../db/db"
 import { collectionBlog, collectionPost } from "../db/db"
 
 
