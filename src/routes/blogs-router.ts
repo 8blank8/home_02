@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
-import { blogsRepository } from "../repositories/blogs-repository";
+import { blogsService } from "../domain/blogs-service";
+import { blogsQueryRepository } from "../repositories/blogs-query-repository";
 import { validationCreateOrUpdateBlog } from "../validations/validations-blogs";
 import { autorizationMiddleware } from "../middlewares/authorization-middleware";
 import { STATUS_CODE } from "../enum/enumStatusCode"; 
@@ -7,14 +8,14 @@ import { STATUS_CODE } from "../enum/enumStatusCode";
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response)=>{
-    const blogs = await blogsRepository.findBlogs()
+    const blogs = await blogsQueryRepository.findBlogs()
     res.status(STATUS_CODE.OK_200).send(blogs)
 })
 
 blogsRouter.get('/:id',  async (req: Request, res: Response)=>{
     const {id} = req.params
 
-    const blog = await blogsRepository.findBlogsById(id)
+    const blog = await blogsQueryRepository.findBlogsById(id)
     
     if(blog){
         res.status(STATUS_CODE.OK_200).send(blog)
@@ -29,7 +30,7 @@ validationCreateOrUpdateBlog,
 async (req: Request, res: Response)=>{
     const {name, description, websiteUrl} = req.body
 
-    const cretatedBlog = await blogsRepository.createBlog({name, description, websiteUrl})
+    const cretatedBlog = await blogsService.createBlog({name, description, websiteUrl})
     res.status(STATUS_CODE.CREATED_201).send(cretatedBlog)
 })
 
@@ -40,7 +41,7 @@ async (req: Request, res: Response)=>{
     const {name, description, websiteUrl} = req.body
     const {id} = req.params
 
-    const isUpdate = await blogsRepository.updateBlog({id, name, description, websiteUrl})
+    const isUpdate = await blogsService.updateBlog({id, name, description, websiteUrl})
     
     if(isUpdate){
         res.sendStatus(STATUS_CODE.NO_CONTENT_204)
@@ -54,7 +55,7 @@ autorizationMiddleware,
 async (req: Request, res: Response)=>{
     const {id} = req.params
     
-    const isDelete = await blogsRepository.deleteBlog(id)
+    const isDelete = await blogsService.deleteBlog(id)
     
     if(isDelete){
         res.sendStatus(STATUS_CODE.NO_CONTENT_204)

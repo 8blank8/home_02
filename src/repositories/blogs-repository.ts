@@ -1,5 +1,4 @@
-import { BlogsType } from "../models/BlogsModel";
-import { BlogCrateType } from "../models/BlogCreateModel";
+import { BlogCreateForDBType } from "../models/BlogCreateForDBModel";
 import { BlogUpdateType } from "../models/BlogUpdateModel";
 import { collectionBlog } from "../db/db";
 
@@ -9,28 +8,13 @@ const optionsCollection = {
 } 
 
 export const blogsRepository = {
-    async findBlogs(){
-        return collectionBlog.find({}, optionsCollection).toArray()
-    },
 
     async findBlogsById(id: string){
-        const res = await collectionBlog.findOne({id}, optionsCollection )
-        return res
+        return await collectionBlog.findOne({id}, optionsCollection )
     },
-
-    async createBlog(blog: BlogCrateType){
-        const createdBlog: BlogsType = {
-            id: String(+(new Date())),
-            createdAt: new Date().toISOString(),
-            isMembership: false,
-            ...blog
-        }
-
-        const resBlog = JSON.parse(JSON.stringify(createdBlog))
-
-        await collectionBlog.insertOne(createdBlog)
-
-        return resBlog
+  
+    async createBlog(blog: BlogCreateForDBType){
+        return await collectionBlog.insertOne(blog)
     },
 
     async updateBlog(blog: BlogUpdateType){

@@ -1,6 +1,6 @@
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { body } from "express-validator";
-import { blogsRepository } from "../repositories/blogs-repository";
+import { blogsQueryRepository } from "../repositories/blogs-query-repository";
 
 export const validationCreateOrUpdatePost = [
     body('title')
@@ -34,7 +34,7 @@ export const validationCreateOrUpdatePost = [
         .withMessage('blogId must be string'),
 
     body('blogId').custom(async (id)=> {
-        const isBlog = await blogsRepository.findBlogsById(id)
+        const isBlog = await blogsQueryRepository.findBlogsById(id)
         if(isBlog === null){
             throw Error('blog not found')
         } 

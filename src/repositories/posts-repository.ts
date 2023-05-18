@@ -1,37 +1,12 @@
-import { PostsType } from "../models/PostsModel"
-import { PostCreate } from "../models/PostCreateModel"
 import { PostUpdateType } from "../models/PostUpdateModel"
-import { collectionBlog, collectionPost } from "../db/db"
+import { collectionPost } from "../db/db"
+import { PostCreateForDBType } from "../models/PostCreateForDBModel"
 
-
-const optionsCollection = {
-    projection: {_id: 0}
-} 
 
 export const postsRepository = {
-    async findPosts(){
-        return collectionPost.find({}, optionsCollection).toArray()
-    },
 
-    async findPostById(id: string){
-        return collectionPost.findOne({id}, optionsCollection)
-    },
-
-    async createPost(post: PostCreate){
-        const blog = await collectionBlog.findOne({id: post.blogId})
-
-        const createdPost: PostsType= {
-            id: String(+(new Date())),
-            blogName: blog?.name,
-            createdAt: new Date().toISOString(),
-            ...post
-        }
-
-        const resPost = JSON.parse(JSON.stringify(createdPost))
-
-        await collectionPost.insertOne(createdPost)
-        
-        return resPost
+    async createPost(post: PostCreateForDBType){
+        return await collectionPost.insertOne(post)
     },
 
     async updatePost(post: PostUpdateType){
