@@ -60,6 +60,6 @@ export const postsQueryRepository = {
     },
 
     async findPostById(id: string){
-        return collectionPost.findOne({id})
+        return collectionPost.findOne({id}, optionsCollection)
     },
 }
