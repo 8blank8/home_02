@@ -36,10 +36,16 @@ blogsRouter.get('/:id',  async (req: Request, res: Response)=>{
 })
 
 blogsRouter.get('/:id/posts', 
-validationCreateOrUpdatePostById,
 async (req: Request, res: Response) => {
     const {id} = req.params
     const {pageSize, pageNumber, sortBy, sortDirection} = req.query
+
+    const isBlog = await blogsQueryRepository.findBlogsById(id)
+
+    if(!isBlog){
+        res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+        return
+    }
 
     const posts = await postsQueryRepository.findPosts({
         pageNumber: pageNumber?.toString(), 
