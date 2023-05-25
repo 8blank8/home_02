@@ -15,8 +15,8 @@ blogsRouter.get('/', async (req: Request, res: Response)=>{
 
     const blogs = await blogsQueryRepository.findBlogs({
         searchNameTerm: searchNameTerm?.toString(),
-        pageNumber: Number(pageNumber),
-        pageSize: Number(pageSize),
+        pageNumber: pageNumber?.toString(),
+        pageSize: pageSize?.toString(),
         sortBy: sortBy?.toString(),
         sortDirection: sortDirection?.toString()
     })
@@ -40,8 +40,8 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response) => {
     const {pageSize, pageNumber, sortBy, sortDirection} = req.query
 
     const posts = await postsQueryRepository.findPosts({
-        pageNumber: Number(pageNumber), 
-        pageSize: Number(pageSize), 
+        pageNumber: pageNumber?.toString(), 
+        pageSize: pageSize?.toString(), 
         sortBy: sortBy?.toString(), 
         sortDirection
     }, id)

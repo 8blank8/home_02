@@ -1,6 +1,6 @@
 export type PostFindType = {
-    pageNumber: number | undefined
-    pageSize: number | undefined
+    pageNumber: string | undefined
+    pageSize: string | undefined
     sortBy: string | undefined
     sortDirection: any
 }

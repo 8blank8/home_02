@@ -17,9 +17,9 @@ export const postsQueryRepository = {
             filter.blogId = id
         }
 
-        const pageNumber: number = option.pageNumber ?? DEFAULT_QUERY.PAGE_NUMBER
-        const pageSize: number = option.pageSize ?? DEFAULT_QUERY.PAGE_SIZE
-
+        const pageNumber: number = typeof option.pageNumber == 'undefined' ? DEFAULT_QUERY.PAGE_NUMBER : Number(option.pageNumber)
+        const pageSize: number = typeof option.pageSize == 'undefined' ? DEFAULT_QUERY.PAGE_SIZE : Number(option.pageSize)
+        
         
         const sort: Sort = {
             sortBy: option.sortBy ?? DEFAULT_QUERY.SORT_BY.toString(),
