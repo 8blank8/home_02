@@ -2,6 +2,7 @@ import { BlogsType } from "../models/BlogsModel";
 import { BlogCrateType } from "../models/BlogCreateModel";
 import { BlogUpdateType } from "../models/BlogUpdateModel";
 import { blogsRepository } from "../repositories/blogs-repository";
+import { postsRepository } from "../repositories/posts-repository";
 
 
 export const blogsService = {
@@ -18,6 +19,8 @@ export const blogsService = {
 
         return createdBlog
     },
+
+    
 
     async updateBlog(blog: BlogUpdateType){
         return await blogsRepository.updateBlog(blog)

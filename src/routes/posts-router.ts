@@ -9,7 +9,14 @@ import { STATUS_CODE } from "../enum/enumStatusCode";
 export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request, res: Response)=>{
-    const posts = await postsQueryRepository.findPosts()
+    const {sortBy, sortDirection, pageNumber, pageSize} = req.query
+
+    const posts = await postsQueryRepository.findPosts({
+        pageNumber: Number(pageNumber), 
+        pageSize: Number(pageSize),
+        sortBy: sortBy?.toString(),
+        sortDirection: sortDirection?.toString()
+    })
     res.status(STATUS_CODE.OK_200).send(posts)
 })
 
