@@ -4,9 +4,9 @@ import { PostFindType } from "../models/PostFindModel"
 import { DEFAULT_QUERY } from "../enum/enumDefaultQuery"
 
 
-const optionsCollection = {
-    projection: {_id: 0}
-} 
+// const optionsCollection = {
+//     projection: {_id: 0}
+// } 
 
 export const postsQueryRepository = {
     async findPosts(option: PostFindType, id: string){
@@ -42,7 +42,7 @@ export const postsQueryRepository = {
             sort.sortDirection = option.sortDirection
         }
 
-        return collectionPost.find(filter, optionsCollection)
+        return collectionPost.find(filter)
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .sort(sort.sortBy, sort.sortDirection)
@@ -50,6 +50,6 @@ export const postsQueryRepository = {
     },
 
     async findPostById(id: string){
-        return collectionPost.findOne({id}, optionsCollection)
+        return collectionPost.findOne({id})
     },
 }
