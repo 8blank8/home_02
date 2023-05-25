@@ -20,7 +20,8 @@ export const blogsQueryRepository = {
         }
 
         if(option.searchNameTerm) {
-            filter.name = {$regex: option.searchNameTerm}
+            const filterName = new RegExp(`${option.searchNameTerm}`, 'i')
+            filter.name = {$regex: filterName} 
         }
 
         const blogs = await collectionBlog.find(filter, optionsCollection)

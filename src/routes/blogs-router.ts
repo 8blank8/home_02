@@ -35,7 +35,10 @@ blogsRouter.get('/:id',  async (req: Request, res: Response)=>{
     }
 })
 
-blogsRouter.get('/:id/posts', async (req: Request, res: Response) => {
+blogsRouter.get('/:id/posts', 
+autorizationMiddleware,
+validationCreateOrUpdatePostById,
+async (req: Request, res: Response) => {
     const {id} = req.params
     const {pageSize, pageNumber, sortBy, sortDirection} = req.query
 
