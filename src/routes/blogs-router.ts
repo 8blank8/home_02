@@ -55,10 +55,12 @@ validationCreateOrUpdateBlog,
 async (req: Request, res: Response)=>{
     const {name, description, websiteUrl} = req.body
 
-    const cretatedBlogId = await blogsService.createBlog({name, description, websiteUrl})
-    const blog = await blogsQueryRepository.findBlogsById(cretatedBlogId)
+    const isCreated = await blogsService.createBlog({name, description, websiteUrl})
 
-    res.status(STATUS_CODE.CREATED_201).send(blog)
+    if(isCreated){
+        res.sendStatus(STATUS_CODE.CREATED_201)
+    }
+
 })
 
 blogsRouter.post('/:id/posts', 

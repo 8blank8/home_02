@@ -15,9 +15,9 @@ export const blogsService = {
             ...blog
         }
 
-        await blogsRepository.createBlog(createdBlog)
+        const createBlog = await blogsRepository.createBlog(createdBlog)
 
-        return createdBlog.id
+        return createBlog.acknowledged
     },
 
     
