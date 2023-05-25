@@ -18,7 +18,7 @@ export const postsService = {
 
         await postsRepository.createPost(createdPost)
         
-        return createdPost
+        return createdPost.id
     },
 
     async updatePost(post: PostUpdateType){

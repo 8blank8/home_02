@@ -1,8 +1,8 @@
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { blogsQueryRepository } from "../repositories/blogs-query-repository";
 
-export const validationCreateOrUpdatePost = [
+const validationCreateOrUpdatePost = [
     body('title')
         .notEmpty()
         .withMessage('title is required')
@@ -17,7 +17,7 @@ export const validationCreateOrUpdatePost = [
         .isString().trim()
         .isLength({min: 1, max: 100})
         .withMessage('shortDescription length min 1 max 100'),
-        
+    
     body('content')
         .notEmpty()
         .withMessage('content is required')
@@ -25,7 +25,10 @@ export const validationCreateOrUpdatePost = [
         .trim()
         .isLength({min: 1, max: 1000})
         .withMessage('content length min 1 max 1000'),
+]
 
+export const validationCreateOrUpdatePostAll = [
+    ...validationCreateOrUpdatePost,
     body('blogId')
         .notEmpty()
         .withMessage('blogId is required')
@@ -35,6 +38,7 @@ export const validationCreateOrUpdatePost = [
 
     body('blogId').custom(async (id)=> {
         const isBlog = await blogsQueryRepository.findBlogsById(id)
+
         if(isBlog === null){
             throw Error('blog not found')
         } 
@@ -42,4 +46,14 @@ export const validationCreateOrUpdatePost = [
     inputValidationMiddleware
 ]
 
+export const validationCreateOrUpdatePostById = [
+    ...validationCreateOrUpdatePost,
+    param('id').custom(async (id) => {
+        const isBlog = await blogsQueryRepository.findBlogsById(id)
 
+        if(isBlog === null){
+            throw Error('blog not found')
+        } 
+    }),
+    inputValidationMiddleware
+]

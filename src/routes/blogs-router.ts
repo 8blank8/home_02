@@ -5,7 +5,7 @@ import { blogsQueryRepository } from "../repositories/blogs-query-repository";
 import { validationCreateOrUpdateBlog } from "../validations/validations-blogs";
 import { autorizationMiddleware } from "../middlewares/authorization-middleware";
 import { STATUS_CODE } from "../enum/enumStatusCode"; 
-import { validationCreateOrUpdatePost } from "../validations/validations-posts";
+import { validationCreateOrUpdatePostById } from "../validations/validations-posts";
 import { postsQueryRepository } from "../repositories/posts-query-repository";
 
 export const blogsRouter = Router({})
@@ -55,19 +55,23 @@ validationCreateOrUpdateBlog,
 async (req: Request, res: Response)=>{
     const {name, description, websiteUrl} = req.body
 
-    const cretatedBlog = await blogsService.createBlog({name, description, websiteUrl})
-    res.status(STATUS_CODE.CREATED_201).send(cretatedBlog)
+    const cretatedBlogId = await blogsService.createBlog({name, description, websiteUrl})
+    const blog = await blogsQueryRepository.findBlogsById(cretatedBlogId)
+
+    res.status(STATUS_CODE.CREATED_201).send(blog)
 })
 
 blogsRouter.post('/:id/posts', 
 autorizationMiddleware, 
+validationCreateOrUpdatePostById,
 async (req: Request, res: Response) => {
     const {id} = req.params
     const {title, shortDescription, content} = req.body
     
-    const isCreated = await postsService.createPost({title, shortDescription, content, blogId: id})
-    
-    res.sendStatus(STATUS_CODE.CREATED_201)
+    const createdPostId = await postsService.createPost({title, shortDescription, content, blogId: id})
+    const post = await postsQueryRepository.findPostById(createdPostId)
+
+    res.status(STATUS_CODE.CREATED_201).send(post)
 })
 
 blogsRouter.put('/:id',

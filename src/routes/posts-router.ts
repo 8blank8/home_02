@@ -1,9 +1,9 @@
 import { Router, Request, Response } from "express";
 import { postsService } from "../domain/posts-service";
 import { postsQueryRepository } from "../repositories/posts-query-repository";
-import { validationCreateOrUpdatePost } from "../validations/validations-posts";
 import { autorizationMiddleware } from "../middlewares/authorization-middleware"
 import { STATUS_CODE } from "../enum/enumStatusCode";
+import { validationCreateOrUpdatePostAll } from "../validations/validations-posts";
 
 
 export const postsRouter = Router({})
@@ -34,18 +34,19 @@ postsRouter.get('/:id', async (req: Request, res: Response)=>{
 
 postsRouter.post('/', 
 autorizationMiddleware,
-validationCreateOrUpdatePost,
+validationCreateOrUpdatePostAll,
 async (req: Request, res: Response)=>{
     const {title, shortDescription, content, blogId} = req.body
 
-    const createdPost = await postsService.createPost({title, shortDescription, content, blogId})
+    const createdPostId = await postsService.createPost({title, shortDescription, content, blogId})
+    const post = await postsQueryRepository.findPostById(createdPostId)
 
-    res.status(STATUS_CODE.CREATED_201).send(createdPost)
+    res.status(STATUS_CODE.CREATED_201).send(post)
 })
 
 postsRouter.put('/:id', 
 autorizationMiddleware,
-validationCreateOrUpdatePost,
+validationCreateOrUpdatePostAll,
 async (req: Request, res: Response)=>{
     const {title, shortDescription, content, blogId} = req.body
     const {id} = req.params

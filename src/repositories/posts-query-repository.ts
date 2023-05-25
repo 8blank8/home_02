@@ -9,7 +9,7 @@ import { DEFAULT_QUERY } from "../enum/enumDefaultQuery"
 // } 
 
 export const postsQueryRepository = {
-    async findPosts(option: PostFindType, id: string){
+    async findPosts(option: PostFindType, id?: string){
 
         const filter: any = {}
 
