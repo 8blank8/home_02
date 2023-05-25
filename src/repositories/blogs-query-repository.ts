@@ -3,9 +3,9 @@ import { BlogFindType } from "../models/BlogFindModel"
 import { Sort } from "../models/PostAndBlogSortModel"
 import { DEFAULT_QUERY } from "../enum/enumDefaultQuery"
 
-// const optionsCollection = {
-//     projection: {_id: 0}
-// } 
+const optionsCollection = {
+    projection: {_id: 0}
+} 
 
 export const blogsQueryRepository = {
     async findBlogs(option: BlogFindType){
@@ -39,7 +39,7 @@ export const blogsQueryRepository = {
             sort.sortDirection = option.sortDirection
         }
 
-        return collectionBlog.find(filter)
+        return collectionBlog.find(filter, optionsCollection)
             .skip((pageNumber - 1) * pageSize).limit(pageSize)
             .sort(sort.sortBy, sort.sortDirection)
             .toArray()
