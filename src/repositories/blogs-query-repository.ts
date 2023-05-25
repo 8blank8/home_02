@@ -39,10 +39,21 @@ export const blogsQueryRepository = {
             sort.sortDirection = option.sortDirection
         }
 
-        return collectionBlog.find(filter, optionsCollection)
-            .skip((pageNumber - 1) * pageSize).limit(pageSize)
-            .sort(sort.sortBy, sort.sortDirection)
-            .toArray()
+        const blogs = await collectionBlog.find(filter, optionsCollection)
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .sort(sort.sortBy, sort.sortDirection)
+        .toArray()
+
+        const blogCount = await collectionBlog.find(filter, optionsCollection).toArray()
+
+        return {
+            pagesCount: Math.ceil(blogCount.length / pageSize),
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: blogCount.length,
+            items: blogs
+        }
     },
 
     async findBlogsById(id: string){
