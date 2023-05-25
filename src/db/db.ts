@@ -5,9 +5,9 @@ import { PostsType } from "../models/PostsModel";
 
 
 dotenv.config()
-// 'process.env.MONGO_URL'
+// 'mongodb://0.0.0.0:27017'
  
-const mongoUri = 'mongodb://0.0.0.0:27017'
+const mongoUri = process.env.MONGO_URL
 console.log(mongoUri) 
 
 if(!mongoUri){ 
