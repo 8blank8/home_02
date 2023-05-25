@@ -11,32 +11,16 @@ export const blogsQueryRepository = {
     async findBlogs(option: BlogFindType){
 
         const filter: any = {}
-        let pageNumber: number = DEFAULT_QUERY.PAGE_NUMBER
-        let pageSize: number = DEFAULT_QUERY.PAGE_SIZE
+        let pageNumber: number = option.pageNumber ?? DEFAULT_QUERY.PAGE_NUMBER
+        let pageSize: number = option.pageSize ?? DEFAULT_QUERY.PAGE_SIZE
 
-        let sort: Sort = {
-            sortBy: DEFAULT_QUERY.SORT_BY.toString(),
-            sortDirection: DEFAULT_QUERY.SORT_DIRECTION
+        const sort: Sort = {
+            sortBy: option.sortBy ?? DEFAULT_QUERY.SORT_BY.toString(),
+            sortDirection: option.sortDirection ?? DEFAULT_QUERY.SORT_DIRECTION
         }
 
         if(option.searchNameTerm) {
             filter.name = {$regex: option.searchNameTerm}
-        }
-
-        if(option.pageNumber){
-            pageNumber = option.pageNumber
-        } 
-
-        if(option.pageSize){
-            pageSize = option.pageSize
-        }
-
-        if(option.sortBy){
-            sort.sortBy = option.sortBy
-        }
-
-        if(option.sortDirection){
-            sort.sortDirection = option.sortDirection
         }
 
         const blogs = await collectionBlog.find(filter, optionsCollection)

@@ -49,6 +49,7 @@ export const validationCreateOrUpdatePostAll = [
 export const validationCreateOrUpdatePostById = [
     ...validationCreateOrUpdatePost,
     param('id').custom(async (id) => {
+        
         const isBlog = await blogsQueryRepository.findBlogsById(id)
 
         if(isBlog === null){

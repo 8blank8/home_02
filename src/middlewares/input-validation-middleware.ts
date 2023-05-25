@@ -16,6 +16,12 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
 
     if(!errors.isEmpty()){
       const err = errors.array({onlyFirstError: true})
+      
+      if(err[0].field == 'id'){
+         res.status(STATUS_CODE.NOT_FOUND_404).send({errorsMessages:  err})
+         return
+      }
+
        res.status(STATUS_CODE.BAD_REQUEST_400).send({errorsMessages:  err})
     }else{
        next()

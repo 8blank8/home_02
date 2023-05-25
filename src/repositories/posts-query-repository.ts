@@ -17,29 +17,13 @@ export const postsQueryRepository = {
             filter.blogId = id
         }
 
-        let pageNumber: number = DEFAULT_QUERY.PAGE_NUMBER
-        let pageSize: number = DEFAULT_QUERY.PAGE_SIZE
+        const pageNumber: number = option.pageNumber ?? DEFAULT_QUERY.PAGE_NUMBER
+        const pageSize: number = option.pageSize ?? DEFAULT_QUERY.PAGE_SIZE
 
         
-        let sort: Sort = {
-            sortBy: DEFAULT_QUERY.SORT_BY.toString(),
-            sortDirection: DEFAULT_QUERY.SORT_DIRECTION
-        }
-
-        if(option.pageNumber){
-            pageNumber = option.pageNumber
-        } 
-
-        if(option.pageSize){
-            pageSize = option.pageSize
-        }
-
-        if(option.sortBy){
-            sort.sortBy = option.sortBy
-        }
-
-        if(option.sortDirection){
-            sort.sortDirection = option.sortDirection
+        const sort: Sort = {
+            sortBy: option.sortBy ?? DEFAULT_QUERY.SORT_BY.toString(),
+            sortDirection: option.sortDirection ?? DEFAULT_QUERY.SORT_DIRECTION
         }
 
         const post = await collectionPost.find(filter, optionsCollection)
