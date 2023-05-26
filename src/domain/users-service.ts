@@ -2,6 +2,7 @@ import { UserCreateType } from "../models/UserCreateModel"
 import bcrypt from 'bcrypt'
 import { usersRepository } from "../repositories/users-repository"
 import { UserLoginType } from "../models/UserLogin"
+import { UserType } from "../models/UserModel"
 
 export const usersService = {
     async createUser(user: UserCreateType){
@@ -9,11 +10,11 @@ export const usersService = {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(user.password, passwordSalt)
 
-        const createUser = {
+        const createUser: UserType = {
             id: (+(new Date())).toString(),
             passwordSalt, 
             passwordHash,
-            userName: user.login,
+            login: user.login,
             email: user.email,
             createdAt: new Date()
         }

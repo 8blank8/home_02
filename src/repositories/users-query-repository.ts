@@ -2,10 +2,8 @@ import { DEFAULT_QUERY } from "../enum/enumDefaultQuery";
 import { Sort } from "../models/PostAndBlogSortModel";
 import { UserFindType } from "../models/UserFindModel";
 import { collectionUser } from "../db/db";
+import { UserType } from "../models/UserModel";
 
-const optionsCollection = {
-    projection: {_id: 0}
-} 
 
 export const usersQueryRepository = {
     async findUsers(option: UserFindType){
@@ -31,7 +29,7 @@ export const usersQueryRepository = {
         }
 
 
-        const users = await collectionUser.find(filter, optionsCollection)
+        const users = await collectionUser.find(filter)
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .sort(sort.sortBy, sort.sortDirection)
@@ -44,11 +42,24 @@ export const usersQueryRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: usersCount,
-            items: users
+            items: users.map((user)=> this._mapUser(user))
         }
     },
 
     async findUserById(id: string){
-        return await collectionUser.findOne({id: id}, optionsCollection)
+        const user = await collectionUser.findOne({id: id})
+
+        if(!user) return false
+
+        return this._mapUser(user)
+    },
+
+    _mapUser(user: UserType){
+        return {
+            id: user.id, 
+            login: user.login, 
+            email: user.email, 
+            createdAt: user.createdAt
+        }
     }
 }
