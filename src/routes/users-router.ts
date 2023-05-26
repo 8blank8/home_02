@@ -13,9 +13,11 @@ validationUser,
 async (req: Request, res: Response) => {
     const {login, email, password} = req.body
 
-    await usersService.createUser({login, email, password})
+    const createdUserId = await usersService.createUser({login, email, password})
     
-    res.sendStatus(STATUS_CODE.CREATED_201)
+    const user = await usersQueryRepository.findUserById(createdUserId)
+
+    res.status(STATUS_CODE.CREATED_201).send(user)
 })
 
 userRouter.get('/', 

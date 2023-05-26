@@ -18,8 +18,9 @@ export const usersService = {
             createdAt: new Date()
         }
 
-        return await usersRepository.createUser(createUser)
+        await usersRepository.createUser(createUser)
 
+        return createUser.id
     },
 
     async deleteUser(id: string){
