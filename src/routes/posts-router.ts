@@ -6,7 +6,7 @@ import { STATUS_CODE } from "../enum/enumStatusCode";
 import { validationCreateOrUpdatePostAll } from "../validations/validations-posts";
 
 
-export const postsRouter = Router({})
+export const postsRouter = Router({}) 
 
 postsRouter.get('/', async (req: Request, res: Response)=>{
     const {sortBy, sortDirection, pageNumber, pageSize} = req.query

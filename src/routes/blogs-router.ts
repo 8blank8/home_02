@@ -12,7 +12,7 @@ export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response)=>{
     const {searchNameTerm, sortBy, sortDirection, pageNumber, pageSize} = req.query
-
+    
     const blogs = await blogsQueryRepository.findBlogs({
         searchNameTerm: searchNameTerm?.toString(),
         pageNumber: pageNumber?.toString(),

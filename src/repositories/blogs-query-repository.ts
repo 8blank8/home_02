@@ -13,9 +13,9 @@ export const blogsQueryRepository = {
         const filter: any = {}
         const pageNumber: number = typeof option.pageNumber == 'undefined' ? DEFAULT_QUERY.PAGE_NUMBER : Number(option.pageNumber)
         const pageSize: number = typeof option.pageSize == 'undefined' ? DEFAULT_QUERY.PAGE_SIZE : Number(option.pageSize)
-        console.log(option.pageSize)
+        
         const sort: Sort = {
-            sortBy: option.sortBy ?? DEFAULT_QUERY.SORT_BY.toString(),
+            sortBy: option.sortBy ?? DEFAULT_QUERY.SORT_BY,
             sortDirection: option.sortDirection ?? DEFAULT_QUERY.SORT_DIRECTION
         }
 
