@@ -3,6 +3,9 @@ import { Sort } from "../models/PostAndBlogSortModel";
 import { UserFindType } from "../models/UserFindModel";
 import { collectionUser } from "../db/db";
 
+const optionsCollection = {
+    projection: {_id: 0}
+} 
 
 export const usersQueryRepository = {
     async findUsers(option: UserFindType){
@@ -28,7 +31,7 @@ export const usersQueryRepository = {
         }
 
 
-        const users = await collectionUser.find(filter)
+        const users = await collectionUser.find(filter, optionsCollection)
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .sort(sort.sortBy, sort.sortDirection)
@@ -46,6 +49,6 @@ export const usersQueryRepository = {
     },
 
     async findUserById(id: string){
-        return await collectionUser.findOne({id: id})
+        return await collectionUser.findOne({id: id}, optionsCollection)
     }
 }
