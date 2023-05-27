@@ -6,9 +6,9 @@ import { UserType } from "../models/UserModel";
 
 
 dotenv.config()
-// 'mongodb://0.0.0.0:27017'
+// process.env.MONGO_URL
  
-const mongoUri = process.env.MONGO_URL
+const mongoUri = 'mongodb://0.0.0.0:27017'
 console.log(mongoUri) 
 
 if(!mongoUri){ 

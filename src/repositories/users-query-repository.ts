@@ -8,7 +8,8 @@ import { UserType } from "../models/UserModel";
 export const usersQueryRepository = {
     async findUsers(option: UserFindType){
 
-        const filter: any = {}
+        const filter: any =  {$or: []}
+         
 
         const pageNumber: number = typeof option.pageNumber == 'undefined' ? DEFAULT_QUERY.PAGE_NUMBER : +option.pageNumber
         const pageSize: number = typeof option.pageSize == 'undefined' ? DEFAULT_QUERY.PAGE_SIZE : +option.pageSize
@@ -20,7 +21,7 @@ export const usersQueryRepository = {
 
         if(option.searchLoginTerm){
             const filterName = new RegExp(`${option.searchLoginTerm}`, 'i')
-            filter.$or = [{userName: {$regex: filterName}}]
+            filter.$or.push({login: {$regex: filterName}})
         }
         
         if(option.searchEmailTerm){
@@ -28,14 +29,13 @@ export const usersQueryRepository = {
             filter.$or.push({email: {$regex: filterEmail}})
         }
 
-
-        const users = await collectionUser.find(filter)
+        const users = await collectionUser.find(filter.$or.length ? filter : {})
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .sort(sort.sortBy, sort.sortDirection)
         .toArray()
 
-        const usersCount = (await collectionUser.find(filter).toArray()).length
+        const usersCount = (await collectionUser.find(filter.$or.length ? filter : {}).toArray()).length
         
         return {
             pagesCount: Math.ceil(usersCount / pageSize),
