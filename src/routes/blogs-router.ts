@@ -64,9 +64,9 @@ async (req: Request, res: Response)=>{
     const {name, description, websiteUrl} = req.body
 
     const cretatedBlogId = await blogsService.createBlog({name, description, websiteUrl})
-    // const blog = await blogsQueryRepository.findBlogsById(cretatedBlogId)
-    // .send(blog)
-    res.sendStatus(STATUS_CODE.CREATED_201)
+    const blog = await blogsQueryRepository.findBlogsById(cretatedBlogId)
+
+    res.status(STATUS_CODE.CREATED_201).send(blog)
 })
 
 blogsRouter.post('/:id/posts', 
