@@ -6,7 +6,7 @@ import { validationUser } from "../validations/validations-user";
 
 export const authRouter = Router({})
 
-authRouter.post('/', 
+authRouter.post('/login', 
 validationAuth,
 async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
