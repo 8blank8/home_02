@@ -16,5 +16,9 @@ export const usersRepository = {
         const user = await collectionUser.deleteOne({id: id})
         
         return user.deletedCount === 1
+    },
+
+    async deleteAllUsers(){
+        await collectionUser.deleteMany({})
     }
 }
