@@ -42,6 +42,6 @@ export const blogsQueryRepository = {
     },
 
     async findBlogsById(id: string){
-        return await collectionBlog.findOne({id}, optionsCollection )
+        return await collectionBlog.findOne({id: id}, optionsCollection)
     },
 }
