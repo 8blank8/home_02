@@ -46,6 +46,7 @@ async (req: Request, res: Response) => {
 
     if(!isDelete){
         res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+        return
     }
  
     res.sendStatus(STATUS_CODE.NO_CONTENT_204) 

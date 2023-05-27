@@ -21,7 +21,7 @@ export const runDb = async () => {
     try{
         await client.connect()
         console.log('Connected successfully to mongo server')
-    } catch { 
+    } catch {  
         await client.close()
         console.log('Connection failed')
     }

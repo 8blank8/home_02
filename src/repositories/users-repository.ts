@@ -14,7 +14,7 @@ export const usersRepository = {
 
     async deleteUser(id: string){
         const user = await collectionUser.deleteOne({id: id})
-
+        
         return user.deletedCount === 1
     }
 }
