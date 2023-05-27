@@ -27,6 +27,5 @@ export const validationCreateOrUpdateBlog = [
         .trim()
         .isLength({max: 100})
         .withMessage('websiteURL max length 100'),
-
     inputValidationMiddleware
 ]

@@ -30,11 +30,11 @@ export const usersService = {
 
     async checkCredentials(data: UserLoginType){
         const user = await usersRepository.findUserByLoginOrEmail(data.loginOrEmail)
-
+        console.log(user)
         if(!user) return false
         
         const passwordHash = await this._generateHash(data.password, user.passwordSalt)
-
+        console.log(user.passwordHash + ' | ' + passwordHash)
         if(passwordHash !== user.passwordHash){
             return false
         }
