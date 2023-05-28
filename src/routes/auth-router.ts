@@ -20,5 +20,15 @@ async (req: Request, res: Response) => {
     }   
     
     const token = await jwtService.createJWT(user)
-    res.status(STATUS_CODE.CREATED_201).send(token)
+    res.status(STATUS_CODE.OK_200).send(token)
+})
+
+authRouter.get('/me', 
+authMiddleware,
+async (req: Request, res: Response) => {
+    const email = req.user!.email
+    const login = req.user!.login
+    const userId = req.user!.id
+
+    return res.status(STATUS_CODE.OK_200).send({email, login, userId})
 })
