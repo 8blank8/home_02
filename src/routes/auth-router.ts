@@ -2,21 +2,23 @@ import { Router, Request, Response } from "express";
 import { usersService } from "../domain/users-service";
 import { STATUS_CODE } from "../enum/enumStatusCode";
 import { validationAuth } from "../validations/validations-auth";
-import { validationUser } from "../validations/validations-user";
+import { jwtService } from "../application/jwt-service";
+import { authMiddleware } from "../middlewares/authMiddlewares";
 
 export const authRouter = Router({})
 
 authRouter.post('/login', 
 validationAuth,
 async (req: Request, res: Response) => {
-    const {loginOrEmail, password} = req.body
-    
-    const isCheck = await usersService.checkCredentials({loginOrEmail, password})
+    const {loginOrEmail, password} = req.body  
 
-    if(!isCheck){
+    const user = await usersService.checkCredentials({loginOrEmail, password})
+
+    if(!user){
         res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
         return
-    }
- 
-    res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+    }   
+    
+    const token = await jwtService.createJWT(user)
+    res.status(STATUS_CODE.CREATED_201).send(token)
 })

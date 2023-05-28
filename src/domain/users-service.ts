@@ -33,12 +33,12 @@ export const usersService = {
         if(!user) return false
         
         const passwordHash = await this._generateHash(data.password, user.passwordSalt)
-        console.log(user.passwordHash + ' | ' + passwordHash)
+        
         if(passwordHash !== user.passwordHash){
             return false
         }
 
-        return true
+        return user
     },
 
     async _generateHash(password: string, salt: string){

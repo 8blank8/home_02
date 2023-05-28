@@ -4,6 +4,10 @@ import { postsQueryRepository } from "../repositories/posts-query-repository";
 import { autorizationMiddleware } from "../middlewares/authorization-middleware"
 import { STATUS_CODE } from "../enum/enumStatusCode";
 import { validationCreateOrUpdatePostAll } from "../validations/validations-posts";
+import { authMiddleware } from "../middlewares/authMiddlewares";
+import { commentsService } from "../domain/comments-service";
+import { commentsQueryRepository } from "../repositories/comments-query-repository";
+import { validationComment } from "../validations/validations-comments";
 
 
 export const postsRouter = Router({}) 
@@ -72,4 +76,47 @@ async (req: Request, res: Response)=>{
     }else{
         res.sendStatus(STATUS_CODE.NOT_FOUND_404)
     }
+})
+
+postsRouter.post('/:id/comments', 
+authMiddleware,
+validationComment,
+async (req: Request, res: Response) => {
+    const id = req.params.id
+    const content = req.body.content
+
+    const isPost = await postsQueryRepository.findPostById(id)
+
+    if(!isPost) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+
+    const commentId = await commentsService.createComment({
+        id, 
+        content,
+        user:  {
+            id: req.user!.id,
+            login: req.user!.login
+        }
+    })
+
+    const comment = await commentsQueryRepository.findCommentById(commentId)
+
+    return res.status(STATUS_CODE.CREATED_201).send(comment)
+})
+
+postsRouter.get('/:id/comments', async (req: Request, res: Response) => {
+    const id = req.params.id
+    const {pageNumber, pageSize, sortBy, sortDirection} = req.query
+
+    const isPost = await postsQueryRepository.findPostById(id)
+
+    if(!isPost) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+
+    const comments = await commentsQueryRepository.findComments(id, {
+        pageNumber: pageNumber?.toString(),
+        sortBy: pageSize?.toString(),
+        sortDirection: sortDirection,
+        pageSize: sortBy?.toString()
+    })
+
+    return res.status(STATUS_CODE.OK_200).send(comments)
 })

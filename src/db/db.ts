@@ -3,12 +3,13 @@ import dotenv from 'dotenv';
 import { BlogsType } from "../models/BlogsModel";
 import { PostsType } from "../models/PostsModel";
 import { UserType } from "../models/UserModel";
+import { settingEnv } from "../setting-env";
+import { CommentType } from "../models/CommentModel";
 
 
 dotenv.config()
-// 'mongodb://0.0.0.0:27017'
  
-const mongoUri = process.env.MONGO_URL
+const mongoUri = settingEnv.MONGO_URL
 console.log(mongoUri) 
 
 if(!mongoUri){ 
@@ -31,5 +32,6 @@ const blogDB = client.db('BlogPlatform')
 export const collectionPost = blogDB.collection<PostsType>('posts')
 export const collectionBlog = blogDB.collection<BlogsType>('blogs')
 export const collectionUser = blogDB.collection<UserType>('users')
+export const collectionComment = blogDB.collection<CommentType>('comments')
 
 

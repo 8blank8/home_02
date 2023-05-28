@@ -3,6 +3,7 @@ import { Sort } from "../models/PostAndBlogSortModel";
 import { UserFindType } from "../models/UserFindModel";
 import { collectionUser } from "../db/db";
 import { UserType } from "../models/UserModel";
+import { UserViewType } from "../models/UserViewModel";
 
 
 export const usersQueryRepository = {
@@ -46,6 +47,10 @@ export const usersQueryRepository = {
         }
     },
 
+    async getFullUserById(id: string) {
+        return collectionUser.findOne({id: id})
+    },
+
     async findUserById(id: string){
         const user = await collectionUser.findOne({id: id})
 
@@ -54,7 +59,7 @@ export const usersQueryRepository = {
         return this._mapUser(user)
     },
 
-    _mapUser(user: UserType){
+    _mapUser(user: UserType): UserViewType{
         return {
             id: user.id, 
             login: user.login, 
