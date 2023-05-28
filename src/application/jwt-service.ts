@@ -11,7 +11,7 @@ import { settingEnv } from '../setting-env'
 export const jwtService = {
     async createJWT(user: UserType) {
         const token = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '20h'})
-        return token
+        return {accessToken: token}
     },
 // : Promise<TJwtPayload | null>
     async getUserIdByToken(token: string){
