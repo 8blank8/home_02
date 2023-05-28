@@ -113,9 +113,9 @@ postsRouter.get('/:id/comments', async (req: Request, res: Response) => {
 
     const comments = await commentsQueryRepository.findComments(id, {
         pageNumber: pageNumber?.toString(),
-        sortBy: pageSize?.toString(),
+        sortBy: sortBy?.toString(),
         sortDirection: sortDirection,
-        pageSize: sortBy?.toString()
+        pageSize: pageSize?.toString()
     })
 
     return res.status(STATUS_CODE.OK_200).send(comments)

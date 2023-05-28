@@ -1,5 +1,4 @@
 import { collectionComment } from "../db/db";
-import { CommentCreateType } from "../models/CommentCreateModel";
 import { CommentType } from "../models/CommentModel";
 
 
