@@ -1,7 +1,5 @@
 import { collectionPost } from "../db/db"
-import { Sort } from "../models/PostAndBlogSortModel"
-import { PostFindType } from "../models/PostFindModel"
-import { DEFAULT_QUERY } from "../enum/enumDefaultQuery"
+import { PostFindType } from "../models/post_models/PostFindModel"
 
 
 const optionsCollection = {
@@ -11,34 +9,27 @@ const optionsCollection = {
 export const postsQueryRepository = {
     async findPosts(option: PostFindType, id?: string){
 
+        const {pageNumber, pageSize, sortBy, sortDirection} = option
+
         const filter: any = {}
 
         if(id){
             filter.blogId = id
         }
 
-        const pageNumber: number = typeof option.pageNumber == 'undefined' ? DEFAULT_QUERY.PAGE_NUMBER : Number(option.pageNumber)
-        const pageSize: number = typeof option.pageSize == 'undefined' ? DEFAULT_QUERY.PAGE_SIZE : Number(option.pageSize)
-        
-        
-        const sort: Sort = {
-            sortBy: option.sortBy ?? DEFAULT_QUERY.SORT_BY.toString(),
-            sortDirection: option.sortDirection ?? DEFAULT_QUERY.SORT_DIRECTION
-        }
-
         const post = await collectionPost.find(filter, optionsCollection)
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .sort(sort.sortBy, sort.sortDirection)
+            .sort(sortBy, sortDirection)
             .toArray()
 
-        const postCount = await collectionPost.find(filter, optionsCollection).toArray()
+        const postCount = (await collectionPost.find(filter, optionsCollection).toArray()).length
 
         return {
-            pagesCount: Math.ceil(postCount.length / pageSize),
+            pagesCount: Math.ceil(postCount / pageSize),
             page: pageNumber,
             pageSize: pageSize,
-            totalCount: postCount.length,
+            totalCount: postCount,
             items: post
         }
     },

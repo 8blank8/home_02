@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { validationResult } from "express-validator"
-import { ErrorType } from "../models/ErrorModel"
+import { ErrorType } from "../models/error_models/ErrorModel"
 import { STATUS_CODE } from "../enum/enumStatusCode"
 
 
