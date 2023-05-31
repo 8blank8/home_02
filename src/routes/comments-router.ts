@@ -4,6 +4,7 @@ import { STATUS_CODE } from "../enum/enumStatusCode";
 import { commentsService } from "../domain/comments-service";
 import { authMiddleware } from "../middlewares/authMiddlewares";
 import { validationComment } from "../validations/validations-comments";
+import { commentCheckUserMiddleware } from "../middlewares/comment-check-user-middleware";
 
 
 export const commentsRouter = Router({})
@@ -20,15 +21,10 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
 
 commentsRouter.delete('/:id', 
 authMiddleware,
+commentCheckUserMiddleware,
 async (req: Request, res: Response) => {
     const id = req.params.id
-
-    const comment = await commentsQueryRepository.findCommentById(id)
-
-    if(!comment) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
-
-    if(comment.commentatorInfo.userId !== req.user!.id) return res.sendStatus(STATUS_CODE.FORBIDDEN_403)
-
+   
     await commentsService.deleteComment(id)
 
     return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
@@ -37,15 +33,10 @@ async (req: Request, res: Response) => {
 commentsRouter.put('/:id', 
 authMiddleware,
 validationComment,
+commentCheckUserMiddleware,
 async (req: Request, res: Response) => {
     const id = req.params.id
     const content = req.body.content
-
-    const comment = await commentsQueryRepository.findCommentById(id)
-
-    if(!comment) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
-
-    if(comment.commentatorInfo.userId !== req.user!.id) return res.sendStatus(STATUS_CODE.FORBIDDEN_403)
 
     await commentsService.updateComment(id, content)
 

@@ -31,7 +31,7 @@ postsRouter.get('/:id', async (req: Request, res: Response)=>{
 
     if(post){
         res.status(STATUS_CODE.OK_200).send(post)
-    }else{
+    }else{ 
         res.sendStatus(STATUS_CODE.NOT_FOUND_404)
     }
 })
@@ -90,7 +90,7 @@ async (req: Request, res: Response) => {
     if(!isPost) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
 
     const commentId = await commentsService.createComment({
-        id, 
+        id,
         content,
         user:  {
             id: req.user!.id,

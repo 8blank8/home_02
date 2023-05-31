@@ -9,7 +9,7 @@ export const usersService = {
 
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(user.password, passwordSalt)
-
+        
         const createUser: UserType = {
             id: (+(new Date())).toString(),
             passwordSalt, 

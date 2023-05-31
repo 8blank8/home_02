@@ -19,7 +19,7 @@ export const commentsQueryRepository = {
 
         const filter: any = {}
 
-        const pageNumber: number = typeof option.pageNumber == 'undefined' ? DEFAULT_QUERY.PAGE_NUMBER : Number(option.pageNumber)
+        const pageNumber: number = typeof option.pageNumber === 'undefined' ? DEFAULT_QUERY.PAGE_NUMBER : Number(option.pageNumber)
         const pageSize: number = typeof option.pageSize == 'undefined' ? DEFAULT_QUERY.PAGE_SIZE : Number(option.pageSize)
         
         const sort: Sort = {
