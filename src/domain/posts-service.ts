@@ -1,6 +1,6 @@
-import { PostsType } from "../models/PostsModel"
-import { PostCreate } from "../models/PostCreateModel"
-import { PostUpdateType } from "../models/PostUpdateModel"
+import { PostsType } from "../models/post_models/PostsModel"
+import { PostCreate } from "../models/post_models/PostCreateModel"
+import { PostUpdateType } from "../models/post_models/PostUpdateModel"
 import { postsRepository } from "../repositories/posts-repository"
 import { blogsRepository } from "../repositories/blogs-repository"
 

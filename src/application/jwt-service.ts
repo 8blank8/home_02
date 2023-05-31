@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { UserType } from '../models/UserModel'
+import { UserType } from '../models/user_models/UserModel'
 import { settingEnv } from '../setting-env'
 
 export const jwtService = {

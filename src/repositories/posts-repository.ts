@@ -1,6 +1,6 @@
-import { PostUpdateType } from "../models/PostUpdateModel"
+import { PostUpdateType } from "../models/post_models/PostUpdateModel"
 import { collectionPost } from "../db/db"
-import { PostCreateForDBType } from "../models/PostCreateForDBModel"
+import { PostCreateForDBType } from "../models/post_models/PostCreateForDBModel"
 
 
 export const postsRepository = {

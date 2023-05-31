@@ -1,10 +1,10 @@
 import { MongoClient } from "mongodb";
 import dotenv from 'dotenv';
-import { BlogsType } from "../models/BlogsModel";
-import { PostsType } from "../models/PostsModel";
-import { UserType } from "../models/UserModel";
+import { BlogsType } from "../models/blog_models/BlogsModel";
+import { PostsType } from "../models/post_models/PostsModel";
+import { UserType } from "../models/user_models/UserModel";
 import { settingEnv } from "../setting-env";
-import { CommentType } from "../models/CommentModel";
+import { CommentType } from "../models/comment_models/CommentModel";
 
 
 dotenv.config()

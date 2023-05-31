@@ -1,5 +1,5 @@
-import { CommentCreateType } from "../models/CommentCreateModel"
-import { CommentType } from "../models/CommentModel"
+import { CommentCreateType } from "../models/comment_models/CommentCreateModel"
+import { CommentType } from "../models/comment_models/CommentModel"
 import { commentsRepository } from "../repositories/commets-repository"
 
 export const commentsService = {

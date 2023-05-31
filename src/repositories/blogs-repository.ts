@@ -1,5 +1,5 @@
-import { BlogCreateForDBType } from "../models/BlogCreateForDBModel";
-import { BlogUpdateType } from "../models/BlogUpdateModel";
+import { BlogCreateForDBType } from "../models/blog_models/BlogCreateForDBModel";
+import { BlogUpdateType } from "../models/blog_models/BlogUpdateModel";
 import { collectionBlog } from "../db/db";
 
 

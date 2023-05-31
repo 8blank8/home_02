@@ -1,8 +1,8 @@
 export type UserFindType = {
     searchLoginTerm: string | undefined
     searchEmailTerm: string | undefined
-    sortBy: string | undefined
+    sortBy: string
     sortDirection: any
-    pageNumber: string | undefined
-    pageSize: string | undefined
+    pageNumber: number
+    pageSize: number
 }

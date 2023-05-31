@@ -1,8 +1,8 @@
-import { UserCreateType } from "../models/UserCreateModel"
+import { UserCreateType } from "../models/user_models/UserCreateModel"
 import bcrypt from 'bcrypt'
 import { usersRepository } from "../repositories/users-repository"
-import { UserLoginType } from "../models/UserLogin"
-import { UserType } from "../models/UserModel"
+import { UserLoginType } from "../models/user_models/UserLogin"
+import { UserType } from "../models/user_models/UserModel"
 
 export const usersService = {
     async createUser(user: UserCreateType){

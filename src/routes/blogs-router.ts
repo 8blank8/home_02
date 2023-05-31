@@ -7,20 +7,25 @@ import { autorizationMiddleware } from "../middlewares/authorization-middleware"
 import { STATUS_CODE } from "../enum/enumStatusCode";
 import { validationCreateOrUpdatePostById } from "../validations/validations-posts";
 import { postsQueryRepository } from "../repositories/posts-query-repository";
+import { DEFAULT_QUERY } from "../enum/enumDefaultQuery";
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response) => {
-    const { searchNameTerm, sortBy, sortDirection, pageNumber, pageSize } = req.query
-    // if(sortBy){
-    //   filter['sortBy'] = req.query
-    //}
+    const { 
+        searchNameTerm, 
+        sortBy = DEFAULT_QUERY.SORT_BY, 
+        sortDirection = DEFAULT_QUERY.SORT_DIRECTION, 
+        pageNumber = DEFAULT_QUERY.PAGE_NUMBER, 
+        pageSize = DEFAULT_QUERY.PAGE_SIZE
+    } = req.query
+   
 
     const blogs = await blogsQueryRepository.findBlogs({
         searchNameTerm: searchNameTerm?.toString(),
-        pageNumber: pageNumber?.toString(),
-        pageSize: pageSize?.toString(),
-        sortBy: sortBy?.toString(),
+        pageNumber: +pageNumber,
+        pageSize: +pageSize,
+        sortBy: sortBy.toString(),
         sortDirection: sortDirection
     })
     res.status(STATUS_CODE.OK_200).send(blogs)
@@ -41,7 +46,12 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
 blogsRouter.get('/:id/posts',
     async (req: Request, res: Response) => {
         const { id } = req.params
-        const { pageSize, pageNumber, sortBy, sortDirection } = req.query
+        const { 
+            pageSize = DEFAULT_QUERY.PAGE_SIZE, 
+            pageNumber = DEFAULT_QUERY.PAGE_NUMBER, 
+            sortBy = DEFAULT_QUERY.SORT_BY, 
+            sortDirection = DEFAULT_QUERY.SORT_DIRECTION 
+        } = req.query
 
         const isBlog = await blogsQueryRepository.findBlogsById(id)
 
@@ -51,9 +61,9 @@ blogsRouter.get('/:id/posts',
         }
 
         const posts = await postsQueryRepository.findPosts({
-            pageNumber: pageNumber?.toString(),
-            pageSize: pageSize?.toString(),
-            sortBy: sortBy?.toString(),
+            pageNumber: +pageNumber,
+            pageSize: +pageSize,
+            sortBy: sortBy.toString(),
             sortDirection
         }, id)
 

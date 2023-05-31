@@ -1,9 +1,9 @@
 import { collectionComment } from "../db/db"
 import { DEFAULT_QUERY } from "../enum/enumDefaultQuery"
-import { CommentFindType } from "../models/CommentFindModel"
-import { CommentType } from "../models/CommentModel"
-import { CommentViewType } from "../models/CommentViewModel"
-import { Sort } from "../models/PostAndBlogSortModel"
+import { CommentFindType } from "../models/comment_models/CommentFindModel"
+import { CommentType } from "../models/comment_models/CommentModel"
+import { CommentViewType } from "../models/comment_models/CommentViewModel"
+import { Sort } from "../models/post_models/PostAndBlogSortModel"
 
 
 export const commentsQueryRepository = {

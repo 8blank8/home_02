@@ -1,4 +1,4 @@
-import { UserViewType } from "../models/UserViewModel";
+import { UserViewType } from "../models/user_models/UserViewModel";
 
 declare global {
     namespace Express {

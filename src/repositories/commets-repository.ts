@@ -1,5 +1,5 @@
 import { collectionComment } from "../db/db";
-import { CommentType } from "../models/CommentModel";
+import { CommentType } from "../models/comment_models/CommentModel";
 
 
 export const commentsRepository = {

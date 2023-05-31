@@ -1,6 +1,6 @@
-import { BlogsType } from "../models/BlogsModel";
-import { BlogCrateType } from "../models/BlogCreateModel";
-import { BlogUpdateType } from "../models/BlogUpdateModel";
+import { BlogsType } from "../models/blog_models/BlogsModel";
+import { BlogCrateType } from "../models/blog_models/BlogCreateModel";
+import { BlogUpdateType } from "../models/blog_models/BlogUpdateModel";
 import { blogsRepository } from "../repositories/blogs-repository";
 
 

@@ -4,6 +4,7 @@ import { usersService } from "../domain/users-service";
 import { usersQueryRepository } from "../repositories/users-query-repository";
 import { autorizationMiddleware } from "../middlewares/authorization-middleware";
 import { validationUser } from "../validations/validations-user";
+import { DEFAULT_QUERY } from "../enum/enumDefaultQuery";
 
 export const userRouter = Router({})
 
@@ -23,15 +24,22 @@ async (req: Request, res: Response) => {
 userRouter.get('/', 
 autorizationMiddleware,
 async (req: Request, res: Response) => {
-    const {searchLoginTerm, searchEmailTerm, sortBy, sortDirection, pageNumber, pageSize} = req.query
+    const {
+        searchLoginTerm, 
+        searchEmailTerm, 
+        sortBy = DEFAULT_QUERY.SORT_BY, 
+        sortDirection = DEFAULT_QUERY.SORT_DIRECTION, 
+        pageNumber = DEFAULT_QUERY.PAGE_NUMBER, 
+        pageSize = DEFAULT_QUERY.PAGE_SIZE
+    } = req.query
 
     const users = await usersQueryRepository.findUsers({
         searchLoginTerm: searchLoginTerm?.toString(), 
         searchEmailTerm: searchEmailTerm?.toString(), 
-        sortBy: sortBy?.toString(), 
-        sortDirection: sortDirection?.toString(), 
-        pageNumber: pageNumber?.toString(), 
-        pageSize: pageSize?.toString()
+        sortBy: sortBy.toString(), 
+        sortDirection: sortDirection, 
+        pageNumber: +pageNumber, 
+        pageSize: +pageSize
     }) 
 
     res.status(STATUS_CODE.OK_200).send(users)

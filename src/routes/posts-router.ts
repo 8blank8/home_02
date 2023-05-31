@@ -8,18 +8,24 @@ import { authMiddleware } from "../middlewares/authMiddlewares";
 import { commentsService } from "../domain/comments-service";
 import { commentsQueryRepository } from "../repositories/comments-query-repository";
 import { validationComment } from "../validations/validations-comments";
+import { DEFAULT_QUERY } from "../enum/enumDefaultQuery";
 
 
 export const postsRouter = Router({}) 
 
 postsRouter.get('/', async (req: Request, res: Response)=>{
-    const {sortBy, sortDirection, pageNumber, pageSize} = req.query
+    const {
+        sortBy = DEFAULT_QUERY.SORT_BY, 
+        sortDirection = DEFAULT_QUERY.SORT_DIRECTION, 
+        pageNumber = DEFAULT_QUERY.PAGE_NUMBER, 
+        pageSize = DEFAULT_QUERY.PAGE_SIZE
+    } = req.query
 
     const posts = await postsQueryRepository.findPosts({
-        pageNumber: pageNumber?.toString(), 
-        pageSize: pageSize?.toString(),
-        sortBy: sortBy?.toString(),
-        sortDirection: sortDirection?.toString()
+        pageNumber: +pageNumber, 
+        pageSize: +pageSize,
+        sortBy: sortBy.toString(),
+        sortDirection: sortDirection
     })
     res.status(STATUS_CODE.OK_200).send(posts)
 })

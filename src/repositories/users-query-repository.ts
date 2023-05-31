@@ -1,39 +1,32 @@
 import { DEFAULT_QUERY } from "../enum/enumDefaultQuery";
-import { Sort } from "../models/PostAndBlogSortModel";
-import { UserFindType } from "../models/UserFindModel";
+import { Sort } from "../models/post_models/PostAndBlogSortModel";
+import { UserFindType } from "../models/user_models/UserFindModel";
 import { collectionUser } from "../db/db";
-import { UserType } from "../models/UserModel";
-import { UserViewType } from "../models/UserViewModel";
+import { UserType } from "../models/user_models/UserModel";
+import { UserViewType } from "../models/user_models/UserViewModel";
 
 
 export const usersQueryRepository = {
     async findUsers(option: UserFindType){
 
+        const {searchEmailTerm, searchLoginTerm, pageNumber, pageSize, sortBy, sortDirection} = option
+
         const filter: any =  {$or: []}
          
-
-        const pageNumber: number = typeof option.pageNumber == 'undefined' ? DEFAULT_QUERY.PAGE_NUMBER : +option.pageNumber
-        const pageSize: number = typeof option.pageSize == 'undefined' ? DEFAULT_QUERY.PAGE_SIZE : +option.pageSize
-
-        const sort: Sort = {
-            sortBy: option.sortBy ?? DEFAULT_QUERY.SORT_BY,
-            sortDirection: option.sortDirection ?? DEFAULT_QUERY.SORT_DIRECTION
-        }
-
-        if(option.searchLoginTerm){
-            const filterName = new RegExp(`${option.searchLoginTerm}`, 'i')
+        if(searchLoginTerm){
+            const filterName = new RegExp(`${searchLoginTerm}`, 'i')
             filter.$or.push({login: {$regex: filterName}})
         }
         
-        if(option.searchEmailTerm){
-            const filterEmail = new RegExp(`${option.searchEmailTerm}`, 'i')
+        if(searchEmailTerm){
+            const filterEmail = new RegExp(`${searchEmailTerm}`, 'i')
             filter.$or.push({email: {$regex: filterEmail}})
         }
 
         const users = await collectionUser.find(filter.$or.length ? filter : {})
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
-        .sort(sort.sortBy, sort.sortDirection)
+        .sort(sortBy, sortDirection)
         .toArray()
 
         const usersCount = (await collectionUser.find(filter.$or.length ? filter : {}).toArray()).length
