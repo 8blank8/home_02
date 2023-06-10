@@ -60,6 +60,11 @@ export const usersQueryRepository = {
         return await collectionUser.findOne({"emailConfirmation.confirmationCode": code})
     },  
 
+    async findUserByLoginOrEmail(loginOrEmail: string){
+        const user = await collectionUser.findOne({$or: [{"acountData.email": loginOrEmail}, {"acountData.login": loginOrEmail}]})
+        return user
+    },
+
     _mapUser(user: UserType): UserViewType{
         return {
             id: user.id, 

@@ -42,7 +42,7 @@ async (req: Request, res: Response) => {
 
     await authService.createUser({login, email, password}, false)
 
-    res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+    return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
 })
 
 authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {

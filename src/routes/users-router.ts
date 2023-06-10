@@ -16,10 +16,10 @@ async (req: Request, res: Response) => {
     const {login, email, password} = req.body
 
     const createdUserId = await authService.createUser({login, email, password}, true)
-    
+
     const user = await usersQueryRepository.findUserById(createdUserId)
 
-    res.status(STATUS_CODE.CREATED_201).send(user)
+    return res.status(STATUS_CODE.CREATED_201).send(user)
 })
 
 userRouter.get('/', 

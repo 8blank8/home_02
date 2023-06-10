@@ -42,7 +42,7 @@ export const authService = {
     },
 
     async checkCredentials(data: UserLoginType){
-        const user = await usersRepository.findUserByLoginOrEmail(data.loginOrEmail)
+        const user = await usersQueryRepository.findUserByLoginOrEmail(data.loginOrEmail)
         if(!user) return false
 
         if(!user.emailConfirmation.isConfirmed) return false
