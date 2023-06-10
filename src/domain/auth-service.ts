@@ -10,7 +10,7 @@ import { usersQueryRepository } from "../repositories/users-query-repository"
 
 export const authService = {
 
-    async createUser(user: UserCreateType){
+    async createUser(user: UserCreateType, isSuperAdmin: boolean){
 
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(user.password, passwordSalt)
@@ -30,11 +30,14 @@ export const authService = {
                 expirationDate: add(new Date(), {
                     minutes: 3
                 }),
-                isConfirmed: false
+                isConfirmed: isSuperAdmin ? true : false
             }
         }
         await usersRepository.createUser(createUser)
-        await emailService.sendEmailConfirmationMessage(createUser.acountData.email, confirmCode)
+
+        if(!isSuperAdmin) {
+            await emailService.sendEmailConfirmationMessage(createUser.acountData.email, confirmCode)
+        }
 
         return createUser.id
     },

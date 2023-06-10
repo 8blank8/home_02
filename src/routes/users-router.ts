@@ -15,7 +15,7 @@ validationUser,
 async (req: Request, res: Response) => {
     const {login, email, password} = req.body
 
-    const createdUserId = await authService.createUser({login, email, password})
+    const createdUserId = await authService.createUser({login, email, password}, true)
     
     const user = await usersQueryRepository.findUserById(createdUserId)
 

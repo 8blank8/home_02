@@ -38,9 +38,9 @@ async (req: Request, res: Response) => {
 authRouter.post('/registration', 
 validationUser,
 async (req: Request, res: Response) => {
-    const {login, email, password} = req.body
+    const {login, email, password} = req.body 
 
-    await authService.createUser({login, email, password})
+    await authService.createUser({login, email, password}, false)
 
     res.sendStatus(STATUS_CODE.NO_CONTENT_204)
 })
