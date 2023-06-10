@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { STATUS_CODE } from "../enum/enumStatusCode";
-import { validationAuth } from "../validations/validations-auth";
+import { validationAuth, validationConfirmationCode } from "../validations/validations-auth";
 import { jwtService } from "../application/jwt-service";
 import { authMiddleware } from "../middlewares/authMiddlewares";
 import { authService } from "../domain/auth-service";
@@ -45,7 +45,9 @@ async (req: Request, res: Response) => {
     return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
 })
 
-authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
+authRouter.post('/registration-confirmation', 
+validationConfirmationCode,
+async (req: Request, res: Response) => {
     const {code} = req.body
 
     const isConfirm = await authService.confirmationEmail(code)

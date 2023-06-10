@@ -22,6 +22,7 @@ export const validationUser = [
         .withMessage('email should be email')
         .custom(async (email)=>{
             const user = await usersQueryRepository.findUserByLoginOrEmail(email)
+            console.log(user)
             if(user) throw Error('user is register')
         }),
 
