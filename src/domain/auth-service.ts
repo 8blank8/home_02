@@ -12,8 +12,7 @@ export const authService = {
 
     async createUser(user: UserCreateType, isSuperAdmin: boolean){
 
-        const passwordSalt = await bcrypt.genSalt(10)
-        const passwordHash = await this._generateHash(user.password, passwordSalt)
+        const passwordHash = await this._generateHash(user.password)
         
         const confirmCode = uuidv4()
 
@@ -47,16 +46,15 @@ export const authService = {
         if(!user) return false
 
         if(!user.emailConfirmation.isConfirmed) return false
-        
-        const passwordSalt = await bcrypt.genSalt(10)
-        const passwordHash = await this._generateHash(data.password, passwordSalt)
-        
-        if(passwordHash !== user.acountData.passwordHash) return false
+
+        if(!await bcrypt.compare(data.password, user.acountData.passwordHash)) return false
 
         return user
     },
 
-    async _generateHash(password: string, salt: string){
+    async _generateHash(password: string){
+        const salt = await bcrypt.genSalt(10)
+
         const hash = await bcrypt.hash(password, salt)
         return hash
     },
