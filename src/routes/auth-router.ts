@@ -50,9 +50,9 @@ validationConfirmationCode,
 async (req: Request, res: Response) => {
     const {code} = req.body
 
-    const isConfirm = await authService.confirmationEmail(code)
+    const isConfirm = await authService.confirmationCode(code)
 
-    if(!isConfirm) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+    if(!isConfirm) return res.status(STATUS_CODE.BAD_REQUEST_400).send({ errorsMessages: [{ message: 'code invalid', field: "code" }] })
 
     return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
 })

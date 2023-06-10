@@ -59,7 +59,7 @@ export const authService = {
         return hash
     },
 
-    async confirmationEmail(code: string){
+    async confirmationCode(code: string){
         const user = await usersQueryRepository.findUserByConfirmationCode(code)
 
         if(!user) return false
