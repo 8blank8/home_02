@@ -35,14 +35,16 @@ export const validationConfirmationCode = [
 
 export const validationConfirmationEmail = [
     body('email')
-    .notEmpty()
+        .notEmpty()
         .withMessage('is required')
         .trim()
         .isString()
         .withMessage('should be type string')
         .custom(async (email)=>{
-            const user = await usersQueryRepository.findUserByConfirmationCode(email)
-            if(user?.emailConfirmation.isConfirmed) throw Error('email is confirmed')
+            const user = await usersQueryRepository.findUserByLoginOrEmail(email)
+            console.log(user)
+            if(!user) throw Error('user not found')
+            if(user.emailConfirmation.isConfirmed) throw Error('email is confirmed')
         }),
     inputValidationMiddleware
 ]
