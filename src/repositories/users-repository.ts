@@ -20,5 +20,15 @@ export const usersRepository = {
 
     async deleteAllUsers(){
         await collectionUser.deleteMany({})
+    },
+
+    async updateIsConfirmation(id: string){
+        const user = await collectionUser.updateOne({id: id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        return user.modifiedCount === 1
+    },
+
+    async updateConfirmationCode(id: string, code: string){
+        const isUpdate = await collectionUser.updateOne({id}, {$set: {'emailConfirmation.confirmationCode': code}})
+        return isUpdate.modifiedCount === 1
     }
 }

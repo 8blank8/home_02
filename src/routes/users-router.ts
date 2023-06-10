@@ -5,6 +5,7 @@ import { usersQueryRepository } from "../repositories/users-query-repository";
 import { autorizationMiddleware } from "../middlewares/authorization-middleware";
 import { validationUser } from "../validations/validations-user";
 import { DEFAULT_QUERY } from "../enum/enumDefaultQuery";
+import { authService } from "../domain/auth-service";
 
 export const userRouter = Router({})
 
@@ -14,7 +15,7 @@ validationUser,
 async (req: Request, res: Response) => {
     const {login, email, password} = req.body
 
-    const createdUserId = await usersService.createUser({login, email, password})
+    const createdUserId = await authService.createUser({login, email, password})
     
     const user = await usersQueryRepository.findUserById(createdUserId)
 

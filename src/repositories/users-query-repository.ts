@@ -52,12 +52,20 @@ export const usersQueryRepository = {
         return this._mapUser(user)
     },
 
+    async findFullUserByEmail(email: string) {
+        return await collectionUser.findOne({"acountData.email": email})
+    },
+
+    async findUserByConfirmationCode(code: string){
+        return await collectionUser.findOne({"emailConfirmation.confirmationCode": code})
+    },  
+
     _mapUser(user: UserType): UserViewType{
         return {
             id: user.id, 
-            login: user.login, 
-            email: user.email, 
-            createdAt: user.createdAt
+            login: user.acountData.login, 
+            email: user.acountData.email, 
+            createdAt: user.acountData.createdAt
         }
     }
 }
