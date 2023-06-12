@@ -26,8 +26,8 @@ export const jwtService = {
     async checkRefreshToken(token: string){
         try {
             const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
-            if(t.exp < new Date().getTime()) return false
-
+            if(t.exp < Math.ceil(new Date().getTime() / 1000)) return false
+            
             const user = await usersQueryRepository.getFullUserById(t.userId)
             if(!user) return false
 
@@ -46,7 +46,7 @@ export const jwtService = {
     async checkExperedRefreshToken(token: string){
        try {
             const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
-            if(t.exp < new Date().getTime()) return false
+            if(t.exp < Math.ceil(new Date().getTime() / 1000)) return false
 
             return true
        } catch {
