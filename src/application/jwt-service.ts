@@ -24,19 +24,33 @@ export const jwtService = {
     },
 
     async checkRefreshToken(token: string){
+        try {
+            const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
+            if(t.exp < new Date()) return false
 
-        const userId = await this.getUserIdByToken(token)
-        if(!userId) return false
+            const user = await usersQueryRepository.getFullUserById(t.userId)
+            if(!user) return false
 
-        const user = await usersQueryRepository.getFullUserById(userId)
-        if(!user) return false
+            const newToken = await this.createJWT(user)
+            const newRefreshToken = await this.createRefreshToken(user)
 
-        const newToken = await this.createJWT(user)
-        const newRefreshToken = await this.createRefreshToken(user)
+            return {
+                token: newToken.accessToken,
+                refreshToken: newRefreshToken
+            }
+       } catch {
+            return false
+       }
+    },
 
-        return {
-            token: newToken.accessToken,
-            refreshToken: newRefreshToken
-        }
-    } 
+    async checkExperedRefreshToken(token: string){
+       try {
+            const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
+            if(t.exp < new Date()) return false
+
+            return true
+       } catch {
+            return false
+       }
+    }
 }
