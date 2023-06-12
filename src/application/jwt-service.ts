@@ -13,7 +13,20 @@ export const jwtService = {
     async createRefreshToken(user: UserType){
         const token = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '20s'})
         
-        await authRepository.postRefreshToken({userId: user.id, refreshToken: token})
+        const isRefreshToken = await authRepository.findRefreshToken(user.id)
+
+        if(!isRefreshToken){
+            await authRepository.postRefreshToken({userId: user.id, refreshToken: token})
+            return token
+        }
+
+        const isUpdateToken = await authRepository.updateRefreshToken({
+            userId: user.id,
+            refreshToken: token
+        })
+
+        if(!isUpdateToken) return false
+
         return token
     },
 
@@ -33,6 +46,7 @@ export const jwtService = {
             
             const refreshToken = await authRepository.findRefreshToken(t.userId)
             if(!refreshToken) return false
+
             if(token !== refreshToken.refreshToken) return false
 
             const user = await usersQueryRepository.getFullUserById(t.userId)
@@ -41,13 +55,8 @@ export const jwtService = {
             const newToken = await this.createJWT(user)
             const newRefreshToken = await this.createRefreshToken(user)
             
-            const isUpdateToken = await authRepository.updateRefreshToken({
-                userId: t.userId,
-                refreshToken: newRefreshToken
-            })
-
-            if(!isUpdateToken) return false
-
+            if(!newRefreshToken) return false
+            
             return {
                 token: newToken,
                 refreshToken: newRefreshToken
