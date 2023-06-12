@@ -35,8 +35,8 @@ export const jwtService = {
             const newRefreshToken = await this.createRefreshToken(user)
 
             return {
-                token: newToken.accessToken,
-                refreshToken: {accessToken: newRefreshToken}
+                token: newToken,
+                refreshToken: newRefreshToken
             }
        } catch {
             return false
