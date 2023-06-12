@@ -5,12 +5,12 @@ import { usersQueryRepository } from '../repositories/users-query-repository'
 
 export const jwtService = {
     async createJWT(user: UserType) {
-        const token = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '20h'})
+        const token = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '10s'})
         return {accessToken: token}
     },
 
     async createRefreshToken(user: UserType){
-        const token = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '24h'})
+        const token = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '20s'})
         return token
     },
 
