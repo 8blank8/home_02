@@ -4,7 +4,6 @@ import { validationAuth, validationConfirmationCode, validationConfirmationEmail
 import { jwtService } from "../application/jwt-service";
 import { authMiddleware } from "../middlewares/authMiddlewares";
 import { authService } from "../domain/auth-service";
-import { usersQueryRepository } from "../repositories/users-query-repository";
 import { validationUser } from "../validations/validations-user";
 
 export const authRouter = Router({})
@@ -22,6 +21,9 @@ async (req: Request, res: Response) => {
     }   
     
     const token = await jwtService.createJWT(user)
+    const refreshToken = await jwtService.createRefreshToken(user)
+
+    res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: false})
     res.status(STATUS_CODE.OK_200).send(token)
 })
 
@@ -67,5 +69,23 @@ async (req: Request, res: Response) => {
     if(!isUpdateCode) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
 
     return res.sendStatus(STATUS_CODE.NO_CONTENT_204) 
+})
 
+authRouter.post('/refresh-token', async (req:Request, res: Response) => {
+    const token = req.cookies.refreshToken
+    if(!token) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    const tokens = await jwtService.checkRefreshToken(token)
+    if(!tokens) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    res.cookie('refreshToken', tokens.refreshToken, {httpOnly: true, secure: false})
+    return res.status(STATUS_CODE.OK_200).send(tokens.token)
+})
+
+authRouter.post('/logout', async (req: Request, res: Response) => {
+    const token = req.cookies.refreshToken
+    if(!token) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    res.clearCookie('refreshToken')
+    return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
 })

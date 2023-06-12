@@ -6,12 +6,15 @@ import { authRouter } from "./routes/auth-router";
 import { userRouter } from "./routes/users-router";
 import { commentsRouter } from "./routes/comments-router";
 import { emailRouter } from "./routes/email-router";
+import cookieParser from "cookie-parser";
 
 export const app = express();
 
 const jsonBodyMidleware = express.json()
 
 app.use(jsonBodyMidleware)
+app.use(cookieParser())
+
 app.use('/testing/all-data', testingRouter)
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
