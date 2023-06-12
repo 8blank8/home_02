@@ -36,7 +36,7 @@ export const jwtService = {
 
             return {
                 token: newToken.accessToken,
-                refreshToken: newRefreshToken
+                refreshToken: {accessToken: newRefreshToken}
             }
        } catch {
             return false
