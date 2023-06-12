@@ -87,7 +87,8 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
     if(!token) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
     const isExpired = await jwtService.checkExperedRefreshToken(token)
-    if(!isExpired) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    res.clearCookie('refreshToken')
+    if(!isExpired) return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
 
     res.clearCookie('refreshToken')
     return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
