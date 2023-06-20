@@ -24,7 +24,7 @@ async (req: Request, res: Response) => {
     const token = await jwtService.createJWT(user)
     // const refreshToken = await jwtService.createRefreshToken(user)
 
-    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: false})
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
     res.status(STATUS_CODE.OK_200).send({accessToken: token.accessToken})
 })
 
@@ -85,7 +85,7 @@ authRouter.post('/refresh-token', async (req:Request, res: Response) => {
     // const token = await jwtService.createJWT(user)
     // const refreshToken = await jwtService.createRefreshToken(user)
 
-    res.cookie('refreshToken', token.refreshToken , {httpOnly: true, secure: false})
+    res.cookie('refreshToken', token.refreshToken , {httpOnly: true, secure: true})
     return res.status(STATUS_CODE.OK_200).send({accessToken: token.accessToken})
 })
 
