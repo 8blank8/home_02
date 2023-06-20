@@ -22,7 +22,10 @@ export const jwtService = {
     //     return token
     // },
 
-    async deleteToken(userId: string){
+    async deleteToken(token: string){
+        const userId = await jwtService.getUserIdByToken(token)
+        if(!userId) return false
+
         return await authRepository.deleteToken(userId)
     },
 
