@@ -1,5 +1,4 @@
 import { MongoClient } from "mongodb";
-import dotenv from 'dotenv';
 import { BlogsType } from "../models/blog_models/BlogsModel";
 import { PostsType } from "../models/post_models/PostsModel";
 import { UserType } from "../models/user_models/UserModel";
@@ -8,7 +7,6 @@ import { CommentType } from "../models/comment_models/CommentModel";
 import { AuthTokenType } from "../models/auth_models/AuthModel";
 
 
-dotenv.config()
  
 const mongoUri = settingEnv.MONGO_URL
 console.log(mongoUri) 

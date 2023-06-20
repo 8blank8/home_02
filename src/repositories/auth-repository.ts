@@ -3,16 +3,21 @@ import { AuthTokenType } from "../models/auth_models/AuthModel";
 
 
 export const authRepository = {
-    async postRefreshToken(token: AuthTokenType){
+    async postToken(token: AuthTokenType){
         return await collectionAuth.insertOne(token)
     },
 
-    async updateRefreshToken(token: AuthTokenType){
-        const isUpdate = await collectionAuth.updateOne({userId: token.userId}, {$set: {refreshToken: token.refreshToken}})
-        return isUpdate.modifiedCount === 1
-    },
-
-    async findRefreshToken(id: string){
-        return await collectionAuth.findOne({userId: id})
+    async deleteToken(userId: string){
+        const res = await collectionAuth.deleteOne({userId: userId})
+        return res.deletedCount === 1
     }
+
+    // async updateToken(token: AuthTokenType){
+    //     const isUpdate = await collectionAuth.updateOne({accessToken: token.accessToken}, {$set: {accessToken: token.accessToken}})
+    //     return isUpdate.modifiedCount === 1
+    // },
+
+    // async findToken(id: string){
+    //     return await collectionAuth.findOne({userId: id})
+    // }
 }

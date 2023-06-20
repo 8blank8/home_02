@@ -5,6 +5,7 @@ import { jwtService } from "../application/jwt-service";
 import { authMiddleware } from "../middlewares/authMiddlewares";
 import { authService } from "../domain/auth-service";
 import { validationUser } from "../validations/validations-user";
+import { usersQueryRepository } from "../repositories/users-query-repository";
 
 export const authRouter = Router({})
 
@@ -72,14 +73,20 @@ async (req: Request, res: Response) => {
 })
 
 authRouter.post('/refresh-token', async (req:Request, res: Response) => {
-    const token = req.cookies.refreshToken
-    if(!token) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    const reqRefreshToken = req.cookies.refreshToken
+    if(!reqRefreshToken) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
-    const tokens = await jwtService.checkRefreshToken(token)
-    if(!tokens) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    const userId = await jwtService.getUserIdByToken(reqRefreshToken)
+    if(!userId) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
-    res.cookie('refreshToken', tokens.refreshToken, {httpOnly: true, secure: true})
-    return res.status(STATUS_CODE.OK_200).send(tokens.token)
+    const user = await usersQueryRepository.getFullUserById(userId)
+    if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    const token = await jwtService.createJWT(user)
+    const refreshToken = await jwtService.createRefreshToken(user)
+
+    res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+    return res.status(STATUS_CODE.OK_200).send(token)
 })
 
 authRouter.post('/logout', async (req: Request, res: Response) => {
@@ -88,6 +95,12 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
 
     const isExpired = await jwtService.checkExperedRefreshToken(token)
     if(!isExpired) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    const userId = await jwtService.getUserIdByToken(token)
+    if(!userId) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    const isDeleteToken = await jwtService.deleteToken(userId)
+    if(!isDeleteToken) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
     res.clearCookie('refreshToken')
     return res.sendStatus(STATUS_CODE.NO_CONTENT_204)

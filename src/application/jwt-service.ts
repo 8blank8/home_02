@@ -7,27 +7,31 @@ import { authRepository } from '../repositories/auth-repository'
 export const jwtService = {
     async createJWT(user: UserType) {
         const token = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '10s'})
+        await authRepository.postToken({userId: user.id, accessToken: token})
         return {accessToken: token}
     },
 
     async createRefreshToken(user: UserType){
         const token = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '20s'})
-        
-        const isRefreshToken = await authRepository.findRefreshToken(user.id)
-
-        if(!isRefreshToken){
-            await authRepository.postRefreshToken({userId: user.id, refreshToken: token})
-            return token
-        }
-
-        const isUpdateToken = await authRepository.updateRefreshToken({
-            userId: user.id,
-            refreshToken: token
-        })
-
-        if(!isUpdateToken) return false
-
         return token
+        // const isToken = await authRepository.findToken(user.id)
+
+        // if(!isToken){
+        //     await authRepository.postToken({userId: user.id, token: token})
+        //     return token
+        // }
+
+        // const isUpdateToken = await authRepository.updateToken({
+        //     userId: user.id,
+        //     token: token
+        // })
+
+        // if(!isUpdateToken) return false
+
+    },
+
+    async deleteToken(userId: string){
+        return await authRepository.deleteToken(userId)
     },
 
     async getUserIdByToken(token: string){
@@ -39,41 +43,48 @@ export const jwtService = {
         }
     },
 
-    async checkRefreshToken(token: string){
-        try {
-            const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
-            if(t.exp < Math.ceil(new Date().getTime() / 1000)) return false
-            
-            const refreshToken = await authRepository.findRefreshToken(t.userId)
-            if(!refreshToken) return false
+    // async findUserByRefreshToken(token: string){
 
-            if(token !== refreshToken.refreshToken) return false
+    //     try{
 
-            const user = await usersQueryRepository.getFullUserById(t.userId)
-            if(!user) return false
+    //         const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
+    //         if(t.exp < Math.ceil(new Date().getTime() / 1000)) return false
 
-            const newToken = await this.createJWT(user)
-            const newRefreshToken = await this.createRefreshToken(user)
+    //         return t.userId
+
+    //     } catch {
+    //         return false
+    //     }
+    //     try {
+    //         const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
+    //         if(t.exp < Math.ceil(new Date().getTime() / 1000)) return false
             
-            if(!newRefreshToken) return false
+    //         const refreshToken = await authRepository.findRefreshToken(t.userId)
+    //         if(!refreshToken) return false
+
+    //         if(token !== refreshToken.refreshToken) return false
+
+    //         const user = await usersQueryRepository.getFullUserById(t.userId)
+    //         if(!user) return false
+
+    //         const newToken = await this.createJWT(user)
+    //         const newRefreshToken = await this.createRefreshToken(user)
             
-            return {
-                token: newToken,
-                refreshToken: newRefreshToken
-            }
-       } catch {
-            return false
-       }
-    },
+    //         if(!newRefreshToken) return false
+            
+    //         return {
+    //             token: newToken,
+    //             refreshToken: newRefreshToken
+    //         }
+    //    } catch {
+    //         return false
+    //    }
+    // },
 
     async checkExperedRefreshToken(token: string){
        try {
             const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
             if(t.exp < Math.ceil(new Date().getTime() / 1000)) return false
-
-            const refreshToken = await authRepository.findRefreshToken(token)
-            if(!refreshToken) return false
-            if(token !== refreshToken.refreshToken) return false
 
             return true
        } catch {
