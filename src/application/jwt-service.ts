@@ -28,7 +28,6 @@ export const jwtService = {
 
         const refreshToken = await authRepository.findTokenByUserId(userId)
         if(!refreshToken) return false
-
         if(token !== refreshToken.refreshToken) return false
 
         return await authRepository.deleteToken(userId)
