@@ -26,6 +26,11 @@ export const jwtService = {
         const userId = await jwtService.getUserIdByToken(token)
         if(!userId) return false
 
+        const refreshToken = await authRepository.findTokenByUserId(userId)
+        if(!refreshToken) return false
+
+        if(token !== refreshToken.refreshToken) return false
+
         return await authRepository.deleteToken(userId)
     },
 
@@ -34,8 +39,9 @@ export const jwtService = {
         const userId = await jwtService.getUserIdByToken(refreshToken)
         if(!userId) return false
 
-        const isToken = await authRepository.findTokenByUserId(userId)
-        if(!isToken) return false
+        const token = await authRepository.findTokenByUserId(userId)
+        if(!token) return false
+        if(refreshToken !== token.refreshToken) return false
 
         const user = await usersQueryRepository.getFullUserById(userId)
         if(!user) return false
