@@ -22,10 +22,10 @@ async (req: Request, res: Response) => {
     }   
 
     const token = await jwtService.createJWT(user)
-    const refreshToken = await jwtService.createRefreshToken(user)
+    // const refreshToken = await jwtService.createRefreshToken(user)
 
-    res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
-    res.status(STATUS_CODE.OK_200).send(token)
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: false})
+    res.status(STATUS_CODE.OK_200).send({accessToken: token.accessToken})
 })
 
 authRouter.get('/me', 
@@ -73,23 +73,20 @@ async (req: Request, res: Response) => {
 })
 
 authRouter.post('/refresh-token', async (req:Request, res: Response) => {
-    const reqRefreshToken = req.cookies.refreshToken
-    if(!reqRefreshToken) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    const refreshToken = req.cookies.refreshToken
+    if(!refreshToken) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
-    const isExpired = await jwtService.checkExperedRefreshToken(reqRefreshToken)
+    const isExpired = await jwtService.checkExperedRefreshToken(refreshToken)
     if(!isExpired) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    
+    const token = await jwtService.updateTokens(refreshToken)
+    if(!token) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
-    const userId = await jwtService.getUserIdByToken(reqRefreshToken)
-    if(!userId) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    // const token = await jwtService.createJWT(user)
+    // const refreshToken = await jwtService.createRefreshToken(user)
 
-    const user = await usersQueryRepository.getFullUserById(userId)
-    if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
-
-    const token = await jwtService.createJWT(user)
-    const refreshToken = await jwtService.createRefreshToken(user)
-
-    res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
-    return res.status(STATUS_CODE.OK_200).send(token)
+    res.cookie('refreshToken', token.refreshToken , {httpOnly: true, secure: false})
+    return res.status(STATUS_CODE.OK_200).send({accessToken: token.accessToken})
 })
 
 authRouter.post('/logout', async (req: Request, res: Response) => {
