@@ -34,6 +34,15 @@ export const jwtService = {
         if(!user) return false
 
         const newToken = await jwtService.createJWT(user)
+
+        const isUpdate = await authRepository.updateToken({
+            userId: userId,
+            accessToken: newToken.accessToken,
+            refreshToken: newToken.refreshToken
+        })
+
+        if(!isUpdate) return false
+
         return newToken
     },
 
