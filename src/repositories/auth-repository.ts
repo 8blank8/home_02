@@ -17,7 +17,7 @@ export const authRepository = {
         return isUpdate.modifiedCount === 1
     },
 
-    async findToken(refreshToken: string){
-        return await collectionAuth.findOne({refreshToken: refreshToken})
+    async findTokenByUserId(userId: string){
+        return await collectionAuth.findOne({userId: userId})
     }
 }
