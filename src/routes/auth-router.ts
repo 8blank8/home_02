@@ -24,7 +24,7 @@ async (req: Request, res: Response) => {
     const token = await jwtService.createJWT(user)
     // const refreshToken = await jwtService.createRefreshToken(user)
 
-    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true, sameSite: "none"})
     res.status(STATUS_CODE.OK_200).send({accessToken: token.accessToken})
 })
 
@@ -82,7 +82,7 @@ authRouter.post('/refresh-token', async (req:Request, res: Response) => {
     const token = await jwtService.updateTokens(refreshToken)
     if(!token) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
-    res.cookie('refreshToken', token.refreshToken , {httpOnly: true, secure: true})
+    res.cookie('refreshToken', token.refreshToken , {httpOnly: true, secure: true, sameSite: "none"})
     return res.status(STATUS_CODE.OK_200).send({accessToken: token.accessToken})
 })
 
