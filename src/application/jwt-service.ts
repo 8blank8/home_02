@@ -13,6 +13,16 @@ export const jwtService = {
         return {accessToken: token, refreshToken: refreshToken}
     },
 
+    async getUserByToken(token: string){
+        try {
+            const result: any = jwt.verify(token, settingEnv.JWT_SECRET)
+            const user = await usersQueryRepository.findUserById(result.userId)
+            return user
+        } catch{
+            return null
+        }
+    },
+
     async getFullUserByToken(token: string){
         try {
             const result: any = jwt.verify(token, settingEnv.JWT_SECRET)
@@ -23,7 +33,7 @@ export const jwtService = {
         }
     },
 
-    async checkExperedRefreshToken(token: string){
+    async checkExperedToken(token: string){
        try {
             jwt.verify(token, settingEnv.JWT_SECRET)
             return true

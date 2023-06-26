@@ -10,7 +10,7 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     const isRefreshToken = await authRepository.findRefreshToken(refreshTokenCookie)
     if(isRefreshToken) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
-    const isExpired = await jwtService.checkExperedRefreshToken(refreshTokenCookie)
+    const isExpired = await jwtService.checkExperedToken(refreshTokenCookie)
     if(!isExpired) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
     return next()
