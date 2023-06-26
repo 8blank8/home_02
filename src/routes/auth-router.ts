@@ -81,8 +81,9 @@ async (req:Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
 
     const user = await jwtService.getFullUserByToken(refreshToken)
-    console.log(user)
     if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    await jwtService.postRefreshToken(refreshToken)
 
     const token = await jwtService.createJWT(user)
 
