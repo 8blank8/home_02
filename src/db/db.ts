@@ -9,7 +9,6 @@ import { AuthTokenType } from "../models/auth_models/AuthModel";
 
  
 const mongoUri = settingEnv.MONGO_URL
-console.log(mongoUri) 
 
 if(!mongoUri){ 
     throw Error('Connection failed')

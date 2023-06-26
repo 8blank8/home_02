@@ -6,6 +6,7 @@ import { authMiddleware } from "../middlewares/authMiddlewares";
 import { authService } from "../domain/auth-service";
 import { validationUser } from "../validations/validations-user";
 import { usersQueryRepository } from "../repositories/users-query-repository";
+import { refreshTokenMiddleware } from "../middlewares/refresh-token-middleware";
 
 export const authRouter = Router({})
 
@@ -73,15 +74,17 @@ async (req: Request, res: Response) => {
     return res.sendStatus(STATUS_CODE.NO_CONTENT_204) 
 })
 
-authRouter.post('/refresh-token', async (req:Request, res: Response) => {
-    const refreshToken = req.cookies.refreshToken
-    if(!refreshToken) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
-
-    const isExpired = await jwtService.checkExperedRefreshToken(refreshToken)
-    if(!isExpired) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+authRouter.post('/refresh-token', 
+refreshTokenMiddleware,
+async (req:Request, res: Response) => {
     
-    const token = await jwtService.updateTokens(refreshToken)
-    if(!token) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    const refreshToken = req.cookies.refreshToken
+
+    const user = await jwtService.getFullUserByToken(refreshToken)
+    console.log(user)
+    if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    const token = await jwtService.createJWT(user)
 
     return res
         .cookie('refreshToken', token.refreshToken , {httpOnly: true, secure: true})
@@ -89,16 +92,14 @@ authRouter.post('/refresh-token', async (req:Request, res: Response) => {
         .send({accessToken: token.accessToken})
 })
 
-authRouter.post('/logout', async (req: Request, res: Response) => {
-    const token = req.cookies.refreshToken
-    if(!token) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+authRouter.post('/logout',
+refreshTokenMiddleware,
+async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken
 
-    // const isExpired = await jwtService.checkExperedRefreshToken(token)
-    // if(!isExpired) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    await jwtService.postRefreshToken(refreshToken)
 
-    const isDeleteToken = await jwtService.deleteToken(token)
-    if(!isDeleteToken) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
-
-    res.clearCookie('refreshToken')
-    return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+    return res
+        .clearCookie('refreshToken')
+        .sendStatus(STATUS_CODE.NO_CONTENT_204)
 })

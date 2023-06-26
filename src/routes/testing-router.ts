@@ -6,11 +6,11 @@ import { commentsRepository } from "../repositories/commets-repository";
 
 export const testingRouter = Router({})
 
-testingRouter.delete('/', (req: Request, res: Response) => {
-    postsRepository.deleteAllPosts()
-    blogsRepository.deleteAllBlogs()
-    usersRepository.deleteAllUsers()
-    commentsRepository.deleteAllComments()
-
-    res.sendStatus(204)
+testingRouter.delete('/', async (req: Request, res: Response) => {
+    await postsRepository.deleteAllPosts(),
+    await blogsRepository.deleteAllBlogs(),
+    await usersRepository.deleteAllUsers(),
+    await commentsRepository.deleteAllComments()
+        
+    return res.sendStatus(204)
  })
