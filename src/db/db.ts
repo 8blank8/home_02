@@ -5,6 +5,7 @@ import { UserType } from "../models/user_models/UserModel";
 import { settingEnv } from "../setting-env";
 import { CommentType } from "../models/comment_models/CommentModel";
 import { AuthTokenType } from "../models/auth_models/AuthModel";
+import { DeviceDbType } from "../models/security/deviceDbModel";
 
 
  
@@ -32,5 +33,6 @@ export const collectionBlog = blogDB.collection<BlogsType>('blogs')
 export const collectionUser = blogDB.collection<UserType>('users')
 export const collectionComment = blogDB.collection<CommentType>('comments')
 export const collectionAuth = blogDB.collection<AuthTokenType>('auth')
+export const collectionDevice = blogDB.collection<DeviceDbType>('device')
 
 

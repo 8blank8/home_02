@@ -4,13 +4,19 @@ import { settingEnv } from '../setting-env'
 import { authRepository } from '../repositories/auth-repository'
 import { usersQueryRepository } from '../repositories/users-query-repository'
 import { AuthTokenType } from '../models/auth_models/AuthModel'
+import { DeviceDateType } from '../models/security/deviceDateModel'
 
 export const jwtService = {
-    async createJWT(user: UserType) {
-        const token = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '10s'})
-        const refreshToken = jwt.sign({userId: user.id}, settingEnv.JWT_SECRET, {expiresIn: '20s'})
+    async createAccessToken(userId: string) {
+        const token = jwt.sign({userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '100s'})
 
-        return {accessToken: token, refreshToken: refreshToken}
+        return {accessToken: token}
+    },
+
+    async createRefreshToken(deviceId: string){
+        const refreshToken = jwt.sign({deviceId: deviceId}, settingEnv.JWT_SECRET, {expiresIn: '200s'})
+
+        return refreshToken
     },
 
     async getUserByToken(token: string){
@@ -48,5 +54,30 @@ export const jwtService = {
         }
 
         return await authRepository.postRefreshToken(createdToken)
+    },
+
+    async getDatesToken(token: string){
+        try {
+
+            const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
+            const date: DeviceDateType = {
+                iat: t.iat,
+                exp: t.exp
+            }
+
+            return date
+            
+        } catch {
+            return false
+        }
+    },
+
+    async getDeviceIdByToken(token: string){
+        try {
+            const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
+            return t.deviceId
+        } catch {
+            return null
+        }
     }
 }

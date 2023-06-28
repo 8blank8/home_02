@@ -7,6 +7,7 @@ import { userRouter } from "./routes/users-router";
 import { commentsRouter } from "./routes/comments-router";
 import { emailRouter } from "./routes/email-router";
 import cookieParser from "cookie-parser";
+import { securityRouter } from "./routes/security-router";
 
 export const app = express();
 
@@ -22,3 +23,4 @@ app.use('/users', userRouter)
 app.use('/auth', authRouter)
 app.use('/comments', commentsRouter)
 app.use('/email', emailRouter)
+app.use('/security', securityRouter)
