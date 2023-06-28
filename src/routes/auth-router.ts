@@ -7,6 +7,8 @@ import { authService } from "../domain/auth-service";
 import { validationUser } from "../validations/validations-user";
 import { usersQueryRepository } from "../repositories/users-query-repository";
 import { refreshTokenMiddleware } from "../middlewares/refresh-token-middleware";
+import { securityService } from "../domain/security-service";
+import { v4 as uuidv4 } from "uuid";
 
 export const authRouter = Router({})
 
@@ -14,20 +16,33 @@ authRouter.post('/login',
 validationAuth,
 async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body  
+    const ip = req.ip
+    const title = req.headers['user-agent']
 
     const user = await authService.checkCredentials({loginOrEmail, password})
+    if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+       
+    const deviceId = uuidv4()
 
-    if(!user){
-        res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
-        return
-    }   
+    const accessToken = await jwtService.createAccessToken(user.id)
+    const refreshToken = await jwtService.createRefreshToken(deviceId)
 
-    const token = await jwtService.createJWT(user)
+    const date = await jwtService.getDatesToken(refreshToken)
+    if(!date) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    await securityService.postDevice({
+        ip: ip,
+        title: title,
+        lasActiveDate: date.iat,
+        experationDate: date.exp,
+        userId: user.id,
+        deviceId: deviceId
+    })
 
     return res
-        .cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
+        .cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
         .status(STATUS_CODE.OK_200)
-        .send({accessToken: token.accessToken})
+        .send(accessToken)
 })
 
 authRouter.get('/me', 
@@ -80,12 +95,16 @@ async (req:Request, res: Response) => {
     
     const refreshToken = req.cookies.refreshToken
 
-    const user = await jwtService.getFullUserByToken(refreshToken)
-    if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    // const user = await jwtService.getFullUserByToken(refreshToken)
+    // if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
-    await jwtService.postRefreshToken(refreshToken)
+    // await jwtService.postRefreshToken(refreshToken)
 
-    const token = await jwtService.createJWT(user)
+    // const token = await jwtService.createJWT(user)
+    const deviceId = await jwtService.getDeviceIdByToken(refreshToken)
+
+    const newAccessToken = await jwtService.createAccessToken(deviceId)
+    const newRefreshToken = await jwtService.createRefreshToken(deviceId)
 
     return res
         .cookie('refreshToken', token.refreshToken , {httpOnly: true, secure: true})
