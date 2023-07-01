@@ -27,14 +27,14 @@ async (req: Request, res: Response) => {
     const accessToken = await jwtService.createAccessToken(user.id)
     const refreshToken = await jwtService.createRefreshToken(deviceId, user.id)
 
-    const date = await jwtService.getDatesToken(refreshToken)
-    if(!date) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
-
+    // const date = await jwtService.getDatesToken(refreshToken)
+    // if(!date) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    const date = new Date()
     await securityService.postDevice({
         ip: ip,
         title: title,
-        lasActiveDate: date.iat,
-        experationDate: date.exp,
+        lasActiveDate: date.toISOString(),
+        experationDate: date.toISOString(),
         userId: user.id,
         deviceId: deviceId
     })
