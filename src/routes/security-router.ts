@@ -15,9 +15,10 @@ async (req: Request, res: Response) => {
 
     const refreshToken = req.cookies.refreshToken
 
-    const deviceId = await jwtService.getDeviceIdByToken(refreshToken)
+    const user = await jwtService.getFullUserByToken(refreshToken)
+    if(!user) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
 
-    const devices = await securityQueryRepository.findDevice(deviceId)
+    const devices = await securityQueryRepository.findDevice(user.id)
 
     return res
             .status(STATUS_CODE.OK_200)

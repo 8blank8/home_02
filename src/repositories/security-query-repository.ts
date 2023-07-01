@@ -3,8 +3,8 @@ import { DeviceDbType } from "../models/security/deviceDbModel"
 
 
 export const securityQueryRepository = {
-    async findDevice(deviceId: string){
-        const device = await collectionDevice.find({deviceId: deviceId}).toArray()
+    async findDevice(userId: string){
+        const device = await collectionDevice.find({userId: userId}).toArray()
         if(!device) return null
 
         return device.map(this._mapDevice)
