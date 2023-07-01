@@ -109,7 +109,10 @@ refreshTokenMiddleware,
 async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
 
-    await jwtService.postRefreshToken(refreshToken)
+    const deviceId = await jwtService.getDeviceIdByToken(refreshToken)
+
+    const isDelete = await securityService.deleteOneDevice(deviceId)
+    if(!isDelete) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
 
     return res
         .clearCookie('refreshToken')

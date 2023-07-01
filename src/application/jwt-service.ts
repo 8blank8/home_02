@@ -8,13 +8,13 @@ import { DeviceDateType } from '../models/security/deviceDateModel'
 
 export const jwtService = {
     async createAccessToken(userId: string) {
-        const token = jwt.sign({userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '100s'})
+        const token = jwt.sign({userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '10s'})
 
         return {accessToken: token}
     },
 
     async createRefreshToken(deviceId: string){
-        const refreshToken = jwt.sign({deviceId: deviceId}, settingEnv.JWT_SECRET, {expiresIn: '200s'})
+        const refreshToken = jwt.sign({deviceId: deviceId}, settingEnv.JWT_SECRET, {expiresIn: '20s'})
 
         return refreshToken
     },
