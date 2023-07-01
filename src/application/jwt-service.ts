@@ -56,21 +56,21 @@ export const jwtService = {
         return await authRepository.postRefreshToken(createdToken)
     },
 
-    async getDatesToken(token: string){
-        try {
+    // async getDatesToken(token: string){
+    //     try {
 
-            const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
-            const date: DeviceDateType = {
-                iat: t.iat,
-                exp: t.exp
-            }
+    //         const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
+    //         const date: DeviceDateType = {
+    //             iat: new Date(t.iat).toISOString(),
+    //             exp: new Date(t.iat).toISOString()
+    //         }
 
-            return date
+    //         return date
             
-        } catch {
-            return false
-        }
-    },
+    //     } catch {
+    //         return false
+    //     }
+    // },
 
     async getDeviceIdByToken(token: string){
         try {
