@@ -94,22 +94,14 @@ refreshTokenMiddleware,
 async (req:Request, res: Response) => {
     
     const refreshToken = req.cookies.refreshToken
-
-    // const user = await jwtService.getFullUserByToken(refreshToken)
-    // if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
-
-    // await jwtService.postRefreshToken(refreshToken)
-
-    // const token = await jwtService.createJWT(user)
-    const deviceId = await jwtService.getDeviceIdByToken(refreshToken)
-
-    const newAccessToken = await jwtService.createAccessToken(deviceId)
-    const newRefreshToken = await jwtService.createRefreshToken(deviceId)
+    
+    const updateToken = await securityService.updateDates(refreshToken)
+    if(!updateToken) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
 
     return res
-        .cookie('refreshToken', token.refreshToken , {httpOnly: true, secure: true})
+        .cookie('refreshToken', updateToken.newRefreshToken , {httpOnly: true, secure: true})
         .status(STATUS_CODE.OK_200)
-        .send({accessToken: token.accessToken})
+        .send(updateToken.newAccessToken)
 })
 
 authRouter.post('/logout',

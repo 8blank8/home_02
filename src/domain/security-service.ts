@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 import { securityRepository } from "../repositories/security-respository"
 import { DevicePostType } from "../models/security/devicePostModel"
 import { securityQueryRepository } from "../repositories/security-query-repository"
+import { jwtService } from "../application/jwt-service"
 
 // iat: string, exp: string, ip: string, title: string = 'unknown', userId: string
 
@@ -35,5 +36,23 @@ export const securityService = {
         if(device.userId !== userId) return false
 
         return true
+    },
+
+    async updateDates(token: string){
+        const deviceId = await jwtService.getDeviceIdByToken(token)
+
+        const newAccessToken = await jwtService.createAccessToken(deviceId)
+        const newRefreshToken = await jwtService.createRefreshToken(deviceId)
+
+        const date = await jwtService.getDatesToken(newRefreshToken)
+        if(!date) return false
+
+        const isUpdate = await securityRepository.updateDates(deviceId, date)
+        if(!isUpdate) return false
+
+        return {
+            newAccessToken, 
+            newRefreshToken
+        }
     }
 }
