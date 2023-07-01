@@ -46,10 +46,16 @@ export const securityService = {
         const newAccessToken = await jwtService.createAccessToken(deviceId)
         const newRefreshToken = await jwtService.createRefreshToken(deviceId, user.id)
 
-        const date = await jwtService.getDatesToken(newRefreshToken)
-        if(!date) return false
+        // const date = await jwtService.getDatesToken(newRefreshToken)
+        // if(!date) return false
+        const date = new Date()
 
-        const isUpdate = await securityRepository.updateDates(deviceId, date)
+        const dateObj: any = {
+            lasActiveDate: date.toISOString(),
+            experationDate: date.toISOString()
+        }
+
+        const isUpdate = await securityRepository.updateDates(deviceId, dateObj)
         if(!isUpdate) return false
 
         return {

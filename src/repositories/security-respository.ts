@@ -17,7 +17,7 @@ export const securityRepository = {
         return deleteDevice.deletedCount === 1
     },
 
-    async updateDates(deviceId: string, dates: DeviceDateType){
+    async updateDates(deviceId: string, dates: any){
         const res = await collectionDevice.updateOne({deviceId: deviceId}, {$set: {lasActiveDate: dates.iat, experationDate: dates.exp}})
         return res.modifiedCount === 1
     }, 
