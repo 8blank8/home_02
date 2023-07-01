@@ -40,9 +40,11 @@ export const securityService = {
 
     async updateDates(token: string){
         const deviceId = await jwtService.getDeviceIdByToken(token)
+        const user = await jwtService.getFullUserByToken(token)
+        if(!user) return false
 
         const newAccessToken = await jwtService.createAccessToken(deviceId)
-        const newRefreshToken = await jwtService.createRefreshToken(deviceId)
+        const newRefreshToken = await jwtService.createRefreshToken(deviceId, user.id)
 
         const date = await jwtService.getDatesToken(newRefreshToken)
         if(!date) return false

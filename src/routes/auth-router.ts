@@ -25,7 +25,7 @@ async (req: Request, res: Response) => {
     const deviceId = uuidv4()
 
     const accessToken = await jwtService.createAccessToken(user.id)
-    const refreshToken = await jwtService.createRefreshToken(deviceId)
+    const refreshToken = await jwtService.createRefreshToken(deviceId, user.id)
 
     const date = await jwtService.getDatesToken(refreshToken)
     if(!date) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)

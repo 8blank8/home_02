@@ -4,16 +4,21 @@ import { securityQueryRepository } from "../repositories/security-query-reposito
 import { STATUS_CODE } from "../enum/enumStatusCode";
 import { jwtService } from "../application/jwt-service";
 import { securityService } from "../domain/security-service";
+import { refreshTokenMiddleware } from "../middlewares/refresh-token-middleware";
 
 export const securityRouter = Router({})
 
 
 securityRouter.get('/devices', 
-authMiddleware,
+refreshTokenMiddleware,
 async (req: Request, res: Response) => {
-    const userId = req.user!.id
 
-    const devices = await securityQueryRepository.findDevice(userId)
+    const refreshToken = req.cookies.refreshToken
+
+    const user = await jwtService.getFullUserByToken(refreshToken)
+    if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+
+    const devices = await securityQueryRepository.findDevice(user.id)
 
     return res
             .status(STATUS_CODE.OK_200)
