@@ -29,12 +29,12 @@ async (req: Request, res: Response) => {
 
     // const date = await jwtService.getDatesToken(refreshToken)
     // if(!date) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
-    const date = new Date()
+    
     await securityService.postDevice({
         ip: ip,
         title: title,
-        lasActiveDate: date.toISOString(),
-        experationDate: date.toISOString(),
+        lasActiveDate: new Date().toISOString(),
+        experationDate: new Date().toISOString(),
         userId: user.id,
         deviceId: deviceId
     })

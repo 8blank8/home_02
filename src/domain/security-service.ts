@@ -48,11 +48,9 @@ export const securityService = {
 
         // const date = await jwtService.getDatesToken(newRefreshToken)
         // if(!date) return false
-        const date = new Date()
-
         const dateObj: any = {
-            lasActiveDate: date.toISOString(),
-            experationDate: date.toISOString()
+            lasActiveDate: new Date().toISOString(),
+            experationDate: new Date().toISOString()
         }
 
         const isUpdate = await securityRepository.updateDates(deviceId, dateObj)
