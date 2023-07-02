@@ -9,10 +9,12 @@ import { usersQueryRepository } from "../repositories/users-query-repository";
 import { refreshTokenMiddleware } from "../middlewares/refresh-token-middleware";
 import { securityService } from "../domain/security-service";
 import { v4 as uuidv4 } from "uuid";
+import { rateLimitMiddleware } from "../middlewares/rate-limit-middleware";
 
 export const authRouter = Router({})
 
 authRouter.post('/login', 
+rateLimitMiddleware,
 validationAuth,
 async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body  
@@ -56,6 +58,7 @@ async (req: Request, res: Response) => {
 })
 
 authRouter.post('/registration', 
+rateLimitMiddleware,
 validationUser,
 async (req: Request, res: Response) => {
     const {login, email, password} = req.body 
@@ -66,6 +69,7 @@ async (req: Request, res: Response) => {
 })
 
 authRouter.post('/registration-confirmation', 
+rateLimitMiddleware,
 validationConfirmationCode,
 async (req: Request, res: Response) => {
     const {code} = req.body
@@ -78,6 +82,7 @@ async (req: Request, res: Response) => {
 })
 
 authRouter.post('/registration-email-resending', 
+rateLimitMiddleware,
 validationConfirmationEmail,
 async (req: Request, res: Response) => {
 

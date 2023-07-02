@@ -6,6 +6,7 @@ import { settingEnv } from "../setting-env";
 import { CommentType } from "../models/comment_models/CommentModel";
 import { AuthTokenType } from "../models/auth_models/AuthModel";
 import { DeviceDbType } from "../models/security/deviceDbModel";
+import { RateLimitType } from "../models/rate_limit/rateLimitDbModel";
 
 
  
@@ -34,5 +35,6 @@ export const collectionUser = blogDB.collection<UserType>('users')
 export const collectionComment = blogDB.collection<CommentType>('comments')
 export const collectionAuth = blogDB.collection<AuthTokenType>('auth')
 export const collectionDevice = blogDB.collection<DeviceDbType>('device')
+export const collectionRateLimit = blogDB.collection<RateLimitType>('rate-limit')
 
 
