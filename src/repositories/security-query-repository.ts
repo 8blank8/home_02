@@ -18,7 +18,7 @@ export const securityQueryRepository = {
         return {
             ip: device.ip,
             title: device.title,
-            lastActiveDate: device.lasActiveDate,
+            lastActiveDate: device.lastActiveDate,
             deviceId: device.deviceId
         }
     },

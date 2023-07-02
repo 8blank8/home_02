@@ -4,6 +4,7 @@ import { securityRepository } from "../repositories/security-respository"
 import { DevicePostType } from "../models/security/devicePostModel"
 import { securityQueryRepository } from "../repositories/security-query-repository"
 import { jwtService } from "../application/jwt-service"
+import { DeviceDateType } from "../models/security/deviceDateModel"
 
 // iat: string, exp: string, ip: string, title: string = 'unknown', userId: string
 
@@ -12,7 +13,7 @@ export const securityService = {
         const createdDevice: DeviceDbType = {
             ip: device.ip,
             title: device.title ?? 'Unknown',
-            lasActiveDate: device.lasActiveDate,
+            lastActiveDate: device.lastActiveDate,
             experationDate: device.experationDate,
             deviceId: device.deviceId,
             userId: device.userId
@@ -46,7 +47,7 @@ export const securityService = {
         const newAccessToken = await jwtService.createAccessToken(user.id)
         const newRefreshToken = await jwtService.createRefreshToken(deviceId, user.id)
 
-        const dateObj: any = {
+        const dateObj: DeviceDateType = {
             lastActiveDate: new Date().toISOString(),
             experationDate: new Date().toISOString()
         }

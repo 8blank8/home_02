@@ -1,4 +1,5 @@
 import { collectionDevice } from "../db/db";
+import { DeviceDateType } from "../models/security/deviceDateModel";
 import { DeviceDbType } from "../models/security/deviceDbModel";
 
 
@@ -16,7 +17,7 @@ export const securityRepository = {
         return deleteDevice.deletedCount === 1
     },
 
-    async updateDates(deviceId: string, dates: any){
+    async updateDates(deviceId: string, dates: DeviceDateType){
         const res = await collectionDevice.updateOne({deviceId: deviceId}, {$set: {lastActiveDate: dates.lastActiveDate, experationDate: dates.experationDate}})
         return res.modifiedCount === 1
     }, 

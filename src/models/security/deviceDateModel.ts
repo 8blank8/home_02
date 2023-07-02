@@ -1,4 +1,4 @@
 export type DeviceDateType = {
-    iat: string
-    exp: string
+    lastActiveDate: string
+    experationDate: string
 }

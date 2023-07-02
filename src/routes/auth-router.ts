@@ -33,7 +33,7 @@ async (req: Request, res: Response) => {
     await securityService.postDevice({
         ip: ip,
         title: title,
-        lasActiveDate: new Date().toISOString(),
+        lastActiveDate: new Date().toISOString(),
         experationDate: new Date().toISOString(),
         userId: user.id,
         deviceId: deviceId
