@@ -1,5 +1,4 @@
 import { collectionDevice } from "../db/db";
-import { DeviceDateType } from "../models/security/deviceDateModel";
 import { DeviceDbType } from "../models/security/deviceDbModel";
 
 
@@ -13,7 +12,7 @@ export const securityRepository = {
     },
 
     async deleteOneDevice(deviceId: string){
-        const deleteDevice = await collectionDevice.deleteOne({deviceId})
+        const deleteDevice = await collectionDevice.deleteOne({deviceId: deviceId})
         return deleteDevice.deletedCount === 1
     },
 
