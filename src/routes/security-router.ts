@@ -5,6 +5,7 @@ import { STATUS_CODE } from "../enum/enumStatusCode";
 import { jwtService } from "../application/jwt-service";
 import { securityService } from "../domain/security-service";
 import { refreshTokenMiddleware } from "../middlewares/refresh-token-middleware";
+import { checkUserDeviceMiddleware } from "../middlewares/check-user-device-middleware";
 
 export const securityRouter = Router({})
 
@@ -40,16 +41,10 @@ async (req: Request, res: Response) => {
 
 securityRouter.delete('/devices/:id',
 refreshTokenMiddleware,
+checkUserDeviceMiddleware,
 async (req: Request, res: Response) => {
     
     const deviceId = req.params.id
-    const refreshToken = req.cookies.refreshToken
-
-    const user = await jwtService.getFullUserByToken(refreshToken)
-    if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
-
-    const isDeleting = await securityService.checkDeletingDevice(user.id, deviceId)
-    if(!isDeleting) return res.sendStatus(STATUS_CODE.FORBIDDEN_403)
 
     const isDeleleDevice = await securityService.deleteOneDevice(deviceId) 
     if(!isDeleleDevice) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)

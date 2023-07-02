@@ -21,5 +21,9 @@ export const securityQueryRepository = {
             lastActiveDate: device.lasActiveDate,
             deviceId: device.deviceId
         }
+    },
+
+    async findDeviceById(deviceId: string){
+        return await collectionDevice.findOne({deviceId: deviceId})
     }
 }
