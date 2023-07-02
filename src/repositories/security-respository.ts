@@ -17,7 +17,7 @@ export const securityRepository = {
     },
 
     async updateDates(deviceId: string, dates: any){
-        const res = await collectionDevice.updateOne({deviceId: deviceId}, {$set: {lasActiveDate: dates.iat, experationDate: dates.exp}})
+        const res = await collectionDevice.updateOne({deviceId: deviceId}, {$set: {lastActiveDate: dates.lastActiveDate, experationDate: dates.experationDate}})
         return res.modifiedCount === 1
     }, 
 

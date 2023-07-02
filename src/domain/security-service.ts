@@ -47,7 +47,7 @@ export const securityService = {
         const newRefreshToken = await jwtService.createRefreshToken(deviceId, user.id)
 
         const dateObj: any = {
-            lasActiveDate: new Date().toISOString(),
+            lastActiveDate: new Date().toISOString(),
             experationDate: new Date().toISOString()
         }
 
