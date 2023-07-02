@@ -27,14 +27,16 @@ async (req: Request, res: Response) => {
 })
 
 securityRouter.delete('/devices', 
-authMiddleware,
+refreshTokenMiddleware,
 async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
-    const userId = req.user!.id
+
+    const user = await jwtService.getFullUserByToken(refreshToken)
+    if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
 
     const deviceId = await jwtService.getDeviceIdByToken(refreshToken)
 
-    await securityService.deleteDevices(userId, deviceId)
+    await securityService.deleteDevices(user.id, deviceId)
 
     return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
 })
