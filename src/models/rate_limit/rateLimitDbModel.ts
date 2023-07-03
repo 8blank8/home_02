@@ -1,6 +1,8 @@
 
 export type RateLimitType = {
     ip: string
-    time: number
-    count: number
+    url: string
+    connectionTime: Date
+    // time: number
+    // count: number
 }

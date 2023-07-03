@@ -2,51 +2,66 @@ import { Request, Response, NextFunction } from "express";
 import { RateLimitType } from "../models/rate_limit/rateLimitDbModel";
 import { rateLimitRepository } from "../repositories/rate-limit-repository";
 import { STATUS_CODE } from "../enum/enumStatusCode";
+import { log } from "console";
+import { collectionRateLimit } from "../db/db";
+import { addSeconds } from "date-fns";
 
 
 export const rateLimitMiddleware = async (req: Request, res: Response, next: NextFunction) => {
 
-    const ip = req.ip
+    // const ip = req.ip
 
-    const result = await rateLimitRepository.findRateLimit(ip)
+    // const result = await rateLimitRepository.findRateLimit(ip)
 
-    if(!result) {
-        const rateLimit: RateLimitType = {
-            ip: ip,
-            time: +(new Date()),
-            count: 1
-        }
+    // if(!result) {
+    //     const rateLimit: RateLimitType = {
+    //         ip: ip,
+    //         time: +(new Date()),
+    //         count: 1
+    //     }
 
-        await rateLimitRepository.createRateLimit(rateLimit)
+    //     await rateLimitRepository.createRateLimit(rateLimit)
 
-        return next()
-    }
+    //     return next()
+    // }
 
-    if((+(new Date()) - 10000) < result.time && result.count === 5) return res.sendStatus(STATUS_CODE.TOO_MANY_REQUESTS_429)
+    // if((+(new Date()) - 10000) < result.time && result.count === 5) return res.sendStatus(STATUS_CODE.TOO_MANY_REQUESTS_429)
     
-    if((+(new Date()) - 10000) > result.time){
-        const isUpdate = await rateLimitRepository.updateRateLimitAll({
-            ip: ip, 
-            time: +(new Date()),
-            count: 1
-        })
+    // if((+(new Date()) - 10000) > result.time){
+    //     const isUpdate = await rateLimitRepository.updateRateLimitAll({
+    //         ip: ip, 
+    //         time: +(new Date()),
+    //         count: 1
+    //     })
         
-        if(!isUpdate) return res.sendStatus(STATUS_CODE.TOO_MANY_REQUESTS_429)
+    //     if(!isUpdate) return res.sendStatus(STATUS_CODE.TOO_MANY_REQUESTS_429)
 
-        return next()
-    }
-    console.log({ 
-        ip: ip,
-        time: result.time,
-        count: result.count++
-    })
+    //     return next()
+    // }
+    // console.log({ 
+    //     ip: ip,
+    //     time: result.time,
+    //     count: result.count++
+    // })
     
-    const isUpdate = await rateLimitRepository.updateRateLimitCount({ 
-        ip: ip,
-        time: result.time,
-        count: result.count++
-    })
-    if(!isUpdate) return res.sendStatus(STATUS_CODE.TOO_MANY_REQUESTS_429)
+    // const isUpdate = await rateLimitRepository.updateRateLimitCount({ 
+    //     ip: ip,
+    //     time: result.time,
+    //     count: result.count++
+    // })
+    // if(!isUpdate) return res.sendStatus(STATUS_CODE.TOO_MANY_REQUESTS_429)
 
+
+    const {ip, url} = req
+    const connectionTime = new Date()
+    const interval = addSeconds(connectionTime, -10)
+
+    const countOfConnections = await collectionRateLimit.countDocuments({ip, url, connectionTime: {$gte: interval}})
+
+    if(countOfConnections + 1 > 5){
+        return res.sendStatus(429)
+    }
+
+    await collectionRateLimit.insertOne({ip, url, connectionTime})
     return next()
 }
