@@ -111,8 +111,8 @@ export const authService = {
         if(!passwordRecoveryData) return false
 
         const passwordHash = await this._generateHash(newPassword)
-
-        const isUpdatePassword = await usersService.updatePassword(passwordRecoveryData.id, passwordHash)
+        
+        const isUpdatePassword = await usersService.updatePassword(passwordRecoveryData.userId, passwordHash)
         if(!isUpdatePassword) return false
 
         return true

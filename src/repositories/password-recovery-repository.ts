@@ -8,6 +8,6 @@ export const passwordRecoveryRepository = {
     },
 
     async checkRecoveryCode(code: string){
-        return await PasswordRecoveryModel.findOne({code: code})
+        return await PasswordRecoveryModel.findOne({confirmationCode: code})
     }
 }

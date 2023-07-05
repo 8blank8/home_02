@@ -144,7 +144,7 @@ rateLimitMiddleware,
 async (req: Request, res: Response) => {
     const newPassword = req.body.newPassword
     const recoveryCode = req.body.recoveryCode
-
+    
     const isUpdate = await authService.updatePassword(recoveryCode, newPassword)
     if(!isUpdate) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
 
