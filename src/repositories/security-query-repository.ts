@@ -1,17 +1,18 @@
-import { collectionDevice } from "../db/db"
+// import { collectionDevice } from "../db/db"
+import { DeviceModel } from "../db/db"
 import { DeviceDbType } from "../models/security/deviceDbModel"
 
 
 export const securityQueryRepository = {
     async findDevice(userId: string){
-        const device = await collectionDevice.find({userId: userId}).toArray()
+        const device = await DeviceModel.find({userId: userId}).lean()
         if(!device) return null
 
         return device.map(this._mapDevice)
     },
 
     async findOneDevice(deviceId: string){
-        return await collectionDevice.findOne({deviceId: deviceId})
+        return await DeviceModel.findOne({deviceId: deviceId})
     },
 
     _mapDevice(device: DeviceDbType){
@@ -24,6 +25,6 @@ export const securityQueryRepository = {
     },
 
     async findDeviceById(deviceId: string){
-        return await collectionDevice.findOne({deviceId: deviceId})
+        return await DeviceModel.findOne({deviceId: deviceId})
     }
 }

@@ -1,4 +1,5 @@
-import { collectionBlog } from "../db/db"
+// import { collectionBlog } from "../db/db"
+import { BlogModel } from "../db/db"
 import { BlogFindType } from "../models/blog_models/BlogFindModel"
 
 const optionsCollection = {
@@ -17,13 +18,13 @@ export const blogsQueryRepository = {
             filter.name = {$regex: filterName} 
         }
 
-        const blogs = await collectionBlog.find(filter, optionsCollection)
+        const blogs = await BlogModel.find(filter, optionsCollection)
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
-        .sort(sortBy, sortDirection)
-        .toArray()
+        .sort({[sortBy]: sortDirection})
+        .lean()
 
-        const blogCount = (await collectionBlog.find(filter, optionsCollection).toArray()).length
+        const blogCount = (await BlogModel.find(filter, optionsCollection).lean()).length
 
         return {
             pagesCount: Math.ceil(blogCount / pageSize),
@@ -35,6 +36,6 @@ export const blogsQueryRepository = {
     },
 
     async findBlogsById(id: string){
-        return await collectionBlog.findOne({id: id}, optionsCollection)
+        return await BlogModel.findOne({id: id}, optionsCollection)
     }
 }

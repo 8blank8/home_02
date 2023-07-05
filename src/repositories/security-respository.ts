@@ -1,28 +1,29 @@
-import { collectionDevice } from "../db/db";
+// import { collectionDevice } from "../db/db";
+import { DeviceModel } from "../db/db";
 import { DeviceDateType } from "../models/security/deviceDateModel";
 import { DeviceDbType } from "../models/security/deviceDbModel";
 
 
 export const securityRepository = {
     async postDevice(device: DeviceDbType){
-        return await collectionDevice.insertOne(device)
+        return await DeviceModel.insertMany(device)
     },
 
     async deleteDevices(userId: string, deviceId: string){
-        return await collectionDevice.deleteMany({userId: userId, $nor: [{deviceId: deviceId}]})
+        return await DeviceModel.deleteMany({userId: userId, $nor: [{deviceId: deviceId}]})
     },
 
     async deleteOneDevice(deviceId: string){
-        const deleteDevice = await collectionDevice.deleteOne({deviceId: deviceId})
+        const deleteDevice = await DeviceModel.deleteOne({deviceId: deviceId})
         return deleteDevice.deletedCount === 1
     },
 
     async updateDates(deviceId: string, dates: DeviceDateType){
-        const res = await collectionDevice.updateOne({deviceId: deviceId}, {$set: {lastActiveDate: dates.lastActiveDate, experationDate: dates.experationDate}})
+        const res = await DeviceModel.updateOne({deviceId: deviceId}, {$set: {lastActiveDate: dates.lastActiveDate, experationDate: dates.experationDate}})
         return res.modifiedCount === 1
     }, 
 
     async deleteAllDevice(){
-        return await collectionDevice.deleteMany({})
+        return await DeviceModel.deleteMany({})
     }
 }

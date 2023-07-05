@@ -1,7 +1,7 @@
 export type UserType = {
     id: string
     acountData: AcountDataType
-    emailConfirmation: EmailConfirmationType
+    emailConfirmation: EmailConfirmationType,
 }
 
 type AcountDataType = {
@@ -16,6 +16,7 @@ type EmailConfirmationType = {
     expirationDate: Date
     isConfirmed: boolean
 }
+
 // acountData: {
 //     passwordHash,
 //     login: user.login,

@@ -7,6 +7,9 @@ import {v4 as uuidv4} from 'uuid'
 import add from "date-fns/add"
 import { emailService } from "./email-service"
 import { usersQueryRepository } from "../repositories/users-query-repository"
+import { passwordRecoveryRepository } from "../repositories/password-recovery-repository"
+import { AuthPasswordRecoveryType } from "../models/auth_models/AuthPasswordRecovery"
+import { usersService } from "./users-service"
 
 export const authService = {
 
@@ -81,5 +84,39 @@ export const authService = {
 
         await emailService.sendEmailConfirmationMessage(user.acountData.email, code)
         return true
-    }   
+    },   
+
+    async sendEmailPasswordRecovery(email: string){
+        
+        const code: string = uuidv4()
+
+        const user = await usersQueryRepository.findFullUserByEmail(email)
+        if(!user) return true
+
+        await emailService.sendPasswordRecovery(email, code)
+
+        const newPasswordRecoveryData: AuthPasswordRecoveryType = {
+            userId: user.id,
+            confirmationCode: code,
+            date: new Date().toISOString()
+        }
+
+        await passwordRecoveryRepository.createPasswordRecoveryCode(newPasswordRecoveryData)
+
+        return true
+    },
+
+    async updatePassword( recoveryCode: string, newPassword: string){
+        const passwordRecoveryData = await passwordRecoveryRepository.checkRecoveryCode(recoveryCode)
+        if(!passwordRecoveryData) return false
+
+        const passwordHash = await this._generateHash(newPassword)
+
+        const isUpdatePassword = await usersService.updatePassword(passwordRecoveryData.id, passwordHash)
+        if(!isUpdatePassword) return false
+
+        return true
+    }
+
+
 }

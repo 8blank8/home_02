@@ -7,5 +7,9 @@ export const usersService = {
         return await usersRepository.deleteUser(id)
     },
 
+    async updatePassword(id: string, newPassword: string){
+        return await usersRepository.updatePassword(id ,newPassword)
+    }
+
     
 }

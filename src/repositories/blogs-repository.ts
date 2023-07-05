@@ -1,6 +1,7 @@
 import { BlogCreateForDBType } from "../models/blog_models/BlogCreateForDBModel";
 import { BlogUpdateType } from "../models/blog_models/BlogUpdateModel";
-import { collectionBlog } from "../db/db";
+// import { collectionBlog } from "../db/db";
+import { BlogModel } from "../db/db";
 
 
 const optionsCollection = {
@@ -10,15 +11,15 @@ const optionsCollection = {
 export const blogsRepository = {
 
     async findBlogsById(id: string){
-        return await collectionBlog.findOne({id}, optionsCollection )
+        return await BlogModel.findOne({id}, optionsCollection )
     },
   
     async createBlog(blog: BlogCreateForDBType){
-        return await collectionBlog.insertOne(blog)
+        return await BlogModel.insertMany(blog)
     },
 
     async updateBlog(blog: BlogUpdateType){
-        const res = await collectionBlog.updateOne({id: blog.id}, {$set: {
+        const res = await BlogModel.updateOne({id: blog.id}, {$set: {
             name: blog.name,
             description: blog.description,
             websiteUrl: blog.websiteUrl
@@ -28,13 +29,13 @@ export const blogsRepository = {
     },
 
     async deleteBlog(id: string){
-        const res = await collectionBlog.deleteOne({id})
+        const res = await BlogModel.deleteOne({id})
 
         return res.deletedCount === 1
     },
-
+ 
     async deleteAllBlogs(){
-        await collectionBlog.deleteMany({})
+        await BlogModel.deleteMany({})
         return true
     }
 }

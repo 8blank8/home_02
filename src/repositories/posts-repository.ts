@@ -1,17 +1,18 @@
 import { PostUpdateType } from "../models/post_models/PostUpdateModel"
-import { collectionPost } from "../db/db"
+// import { collectionPost } from "../db/db"
+import { PostModel } from "../db/db"
 import { PostCreateForDBType } from "../models/post_models/PostCreateForDBModel"
 
 
 export const postsRepository = {
 
     async createPost(post: PostCreateForDBType){
-        return await collectionPost.insertOne(post)
+        return await PostModel.insertMany(post)
     },
 
     async updatePost(post: PostUpdateType){
 
-        const res = await collectionPost.updateOne({id: post.id}, {$set: {
+        const res = await PostModel.updateOne({id: post.id}, {$set: {
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,
@@ -23,13 +24,13 @@ export const postsRepository = {
 
     async deletePost(id: string){
 
-        const res = await collectionPost.deleteOne({id})
+        const res = await PostModel.deleteOne({id})
         
         return res.deletedCount === 1
     },
 
     async deleteAllPosts(){
-        await collectionPost.deleteMany({})
+        await PostModel.deleteMany({})
         return true
     }
 }

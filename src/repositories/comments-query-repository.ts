@@ -1,4 +1,5 @@
-import { collectionComment } from "../db/db"
+// import { collectionComment } from "../db/db"
+import { CommentModel } from "../db/db"
 import { DEFAULT_QUERY } from "../enum/enumDefaultQuery"
 import { CommentFindType } from "../models/comment_models/CommentFindModel"
 import { CommentType } from "../models/comment_models/CommentModel"
@@ -8,7 +9,7 @@ import { Sort } from "../models/post_models/PostAndBlogSortModel"
 
 export const commentsQueryRepository = {
     async findCommentById(id: string){
-        const comment = await collectionComment.findOne({id})
+        const comment = await CommentModel.findOne({id})
         
         if(!comment) return null
 
@@ -31,13 +32,13 @@ export const commentsQueryRepository = {
             filter.postId = id
         }
 
-        const comments = await collectionComment.find(filter)
+        const comments = await CommentModel.find(filter)
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .sort(sort.sortBy, sort.sortDirection)
-            .toArray()
+            .sort({[sort.sortBy]: sort.sortDirection})
+            .lean()
 
-        const postCount = (await collectionComment.find(filter).toArray()).length
+        const postCount = (await CommentModel.find(filter).lean()).length
 
         return {
             pagesCount: Math.ceil(postCount / pageSize),

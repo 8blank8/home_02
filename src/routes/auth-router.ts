@@ -10,6 +10,7 @@ import { refreshTokenMiddleware } from "../middlewares/refresh-token-middleware"
 import { securityService } from "../domain/security-service";
 import { v4 as uuidv4 } from "uuid";
 import { rateLimitMiddleware } from "../middlewares/rate-limit-middleware";
+import { validationEmail, validationPassword } from "../validations/validation-password-recovery";
 
 export const authRouter = Router({})
 
@@ -122,4 +123,30 @@ async (req: Request, res: Response) => {
     return res
         .clearCookie('refreshToken')
         .sendStatus(STATUS_CODE.NO_CONTENT_204)
+})
+
+authRouter.post('/password-recovery', 
+validationEmail,
+rateLimitMiddleware,
+async (req: Request, res: Response) => {
+    const email = req.body.email
+
+    const isSendCode = await authService.sendEmailPasswordRecovery(email)
+    if(!isSendCode) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+
+    return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+})
+
+
+authRouter.post('/new-password', 
+validationPassword,
+rateLimitMiddleware,
+async (req: Request, res: Response) => {
+    const newPassword = req.body.newPassword
+    const recoveryCode = req.body.recoveryCode
+
+    const isUpdate = await authService.updatePassword(recoveryCode, newPassword)
+    if(!isUpdate) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+
+    return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
 })

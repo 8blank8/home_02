@@ -1,4 +1,5 @@
-import { collectionPost } from "../db/db"
+// import { collectionPost } from "../db/db"
+import { PostModel } from "../db/db"
 import { PostFindType } from "../models/post_models/PostFindModel"
 
 
@@ -17,13 +18,13 @@ export const postsQueryRepository = {
             filter.blogId = id
         }
 
-        const post = await collectionPost.find(filter, optionsCollection)
+        const post = await PostModel.find(filter, optionsCollection)
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .sort(sortBy, sortDirection)
-            .toArray()
+            .sort({[sortBy]: sortDirection})
+            .lean()
 
-        const postCount = (await collectionPost.find(filter, optionsCollection).toArray()).length
+        const postCount = (await PostModel.find(filter, optionsCollection).lean()).length
 
         return {
             pagesCount: Math.ceil(postCount / pageSize),
@@ -35,6 +36,6 @@ export const postsQueryRepository = {
     },
 
     async findPostById(id: string){
-        return collectionPost.findOne({id}, optionsCollection)
+        return PostModel.findOne({id}, optionsCollection)
     },
 }

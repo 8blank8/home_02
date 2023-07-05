@@ -1,7 +1,8 @@
 import { DEFAULT_QUERY } from "../enum/enumDefaultQuery";
 import { Sort } from "../models/post_models/PostAndBlogSortModel";
 import { UserFindType } from "../models/user_models/UserFindModel";
-import { collectionUser } from "../db/db";
+// import { collectionUser } from "../db/db";
+import { UserModel } from "../db/db";
 import { UserType } from "../models/user_models/UserModel";
 import { UserViewType } from "../models/user_models/UserViewModel";
 
@@ -23,13 +24,13 @@ export const usersQueryRepository = {
             filter.$or.push({email: {$regex: filterEmail}})
         }
 
-        const users = await collectionUser.find(filter.$or.length ? filter : {})
+        const users = await UserModel.find(filter.$or.length ? filter : {})
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
-        .sort(sortBy, sortDirection)
-        .toArray()
+        .sort({[sortBy]: sortDirection})
+        .lean()
 
-        const usersCount = (await collectionUser.find(filter.$or.length ? filter : {}).toArray()).length
+        const usersCount = (await UserModel.find(filter.$or.length ? filter : {}).lean()).length
         
         return {
             pagesCount: Math.ceil(usersCount / pageSize),
@@ -41,11 +42,11 @@ export const usersQueryRepository = {
     },
 
     async getFullUserById(id: string) {
-        return collectionUser.findOne({id: id})
+        return UserModel.findOne({id: id})
     },
 
     async findUserById(id: string){
-        const user = await collectionUser.findOne({id: id})
+        const user = await UserModel.findOne({id: id})
 
         if(!user) return false
 
@@ -53,15 +54,16 @@ export const usersQueryRepository = {
     },
 
     async findFullUserByEmail(email: string) {
-        return await collectionUser.findOne({"acountData.email": email})
+        const user = await UserModel.findOne({"acountData.email": email})
+        return user
     },
 
     async findUserByConfirmationCode(code: string){
-        return await collectionUser.findOne({"emailConfirmation.confirmationCode": code})
+        return await UserModel.findOne({"emailConfirmation.confirmationCode": code})
     },  
 
     async findUserByLoginOrEmail(loginOrEmail: string){
-        const user = await collectionUser.findOne({$or: [{"acountData.email": loginOrEmail}, {"acountData.login": loginOrEmail}]})
+        const user = await UserModel.findOne({$or: [{"acountData.email": loginOrEmail}, {"acountData.login": loginOrEmail}]})
         return user
     },
 

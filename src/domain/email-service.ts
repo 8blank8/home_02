@@ -3,8 +3,8 @@ import { UserType } from "../models/user_models/UserModel"
 
 
 export const emailService = {
-    async sendPasswordRecovery(user: any){
-        await emailManager.sendPasswordRecovery(user.email)
+    async sendPasswordRecovery(email: string, code: string){
+        await emailManager.sendPasswordRecovery(email, code)
     },
 
     async sendEmailConfirmationMessage(email: string, code: string){
