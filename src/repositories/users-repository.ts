@@ -1,7 +1,6 @@
 import { UserType } from "../models/user_models/UserModel";
 // import { collectionUser } from "../db/db";
 import { UserModel } from "../db/db";
-import { UserUpdatePasswordType } from "../models/user_models/UserUpdatePasswordModel";
 
 
 export const usersRepository = {

@@ -10,7 +10,6 @@ import { usersQueryRepository } from "../repositories/users-query-repository"
 import { passwordRecoveryRepository } from "../repositories/password-recovery-repository"
 import { AuthPasswordRecoveryType } from "../models/auth_models/AuthPasswordRecovery"
 import { usersService } from "./users-service"
-import { UserUpdatePasswordType } from "../models/user_models/UserUpdatePasswordModel"
 
 export const authService = {
 

@@ -140,9 +140,9 @@ async (req: Request, res: Response) => {
 
 
 authRouter.post('/new-password', 
+rateLimitMiddleware,
 validationPassword,
 validationRecoveryCode,
-rateLimitMiddleware,
 async (req: Request, res: Response) => {
     const newPassword = req.body.newPassword
     const recoveryCode = req.body.recoveryCode

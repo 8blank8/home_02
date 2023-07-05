@@ -1,4 +1,3 @@
-import { UserUpdatePasswordType } from "../models/user_models/UserUpdatePasswordModel"
 import { usersRepository } from "../repositories/users-repository"
 
 export const usersService = {
