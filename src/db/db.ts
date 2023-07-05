@@ -120,7 +120,7 @@ const PasswordRecoverySchema = new mongoose.Schema<AuthPasswordRecoveryType>({
     date: {type: String, required: true}
 }) 
 
-export const PasswordRecoveryModel = mongoose.model('password-recovery')
+export const PasswordRecoveryModel = mongoose.model('password-recovery', PasswordRecoverySchema)
 
 
 // export const PasswordRecoveryModel = mongoose.model('password-recovery', PasswordRecoverySchema)
