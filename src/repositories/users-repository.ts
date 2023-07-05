@@ -1,6 +1,7 @@
 import { UserType } from "../models/user_models/UserModel";
 // import { collectionUser } from "../db/db";
 import { UserModel } from "../db/db";
+import { UserUpdatePasswordType } from "../models/user_models/UserUpdatePasswordModel";
 
 
 export const usersRepository = {
@@ -28,8 +29,8 @@ export const usersRepository = {
         return isUpdate.matchedCount === 1
     },
     
-    async updatePassword(id: string, newPassword: string){
-        const res = await UserModel.updateOne({id: id}, {$set: {'acountData.passwordHash': newPassword}})
+    async updatePassword(id: string, passwordHash: string){
+        const res = await UserModel.updateOne({id: id}, {$set: {'acountData.passwordHash': passwordHash}})
         return res.matchedCount === 1
     }
 }

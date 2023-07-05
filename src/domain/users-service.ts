@@ -1,3 +1,4 @@
+import { UserUpdatePasswordType } from "../models/user_models/UserUpdatePasswordModel"
 import { usersRepository } from "../repositories/users-repository"
 
 export const usersService = {
@@ -7,8 +8,8 @@ export const usersService = {
         return await usersRepository.deleteUser(id)
     },
 
-    async updatePassword(id: string, newPassword: string){
-        return await usersRepository.updatePassword(id ,newPassword)
+    async updatePassword(id: string, passwordHash: string){
+        return await usersRepository.updatePassword(id, passwordHash)
     }
 
     

@@ -9,5 +9,10 @@ export const passwordRecoveryRepository = {
 
     async checkRecoveryCode(code: string){
         return await PasswordRecoveryModel.findOne({confirmationCode: code})
+    },
+
+    async updatePasswordRecoveryData(userId: string ,isExpired: boolean){
+        const res = await PasswordRecoveryModel.updateOne({userId: userId}, {$set: {isExpired: isExpired}})
+        return res.matchedCount === 1
     }
 }

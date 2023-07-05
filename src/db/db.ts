@@ -117,7 +117,8 @@ export const RateLimitModel = mongoose.model('rate-limit', RateLimitSchema)
 const PasswordRecoverySchema = new mongoose.Schema<AuthPasswordRecoveryType>({
     userId: {type: String, required: true},
     confirmationCode: {type: String, required: true},
-    date: {type: String, required: true}
+    date: {type: String, required: true},
+    isExpired: {type: Boolean, required: true}
 }) 
 
 export const PasswordRecoveryModel = mongoose.model('password-recovery', PasswordRecoverySchema)

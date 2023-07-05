@@ -10,6 +10,7 @@ import { usersQueryRepository } from "../repositories/users-query-repository"
 import { passwordRecoveryRepository } from "../repositories/password-recovery-repository"
 import { AuthPasswordRecoveryType } from "../models/auth_models/AuthPasswordRecovery"
 import { usersService } from "./users-service"
+import { UserUpdatePasswordType } from "../models/user_models/UserUpdatePasswordModel"
 
 export const authService = {
 
@@ -98,7 +99,8 @@ export const authService = {
         const newPasswordRecoveryData: AuthPasswordRecoveryType = {
             userId: user.id,
             confirmationCode: code,
-            date: new Date().toISOString()
+            date: new Date().toISOString(),
+            isExpired: false
         }
 
         await passwordRecoveryRepository.createPasswordRecoveryCode(newPasswordRecoveryData)
@@ -111,9 +113,12 @@ export const authService = {
         if(!passwordRecoveryData) return false
 
         const passwordHash = await this._generateHash(newPassword)
-        
+
         const isUpdatePassword = await usersService.updatePassword(passwordRecoveryData.userId, passwordHash)
         if(!isUpdatePassword) return false
+
+        const isUpdateRecoveryPasswordData = await passwordRecoveryRepository.updatePasswordRecoveryData(passwordRecoveryData.userId ,true)
+        if(!isUpdateRecoveryPasswordData) return false
 
         return true
     }

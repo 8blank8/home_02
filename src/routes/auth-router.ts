@@ -11,6 +11,7 @@ import { securityService } from "../domain/security-service";
 import { v4 as uuidv4 } from "uuid";
 import { rateLimitMiddleware } from "../middlewares/rate-limit-middleware";
 import { validationEmail, validationPassword } from "../validations/validation-password-recovery";
+import { validationRecoveryCode } from "../validations/validation-recovery-code";
 
 export const authRouter = Router({})
 
@@ -140,6 +141,7 @@ async (req: Request, res: Response) => {
 
 authRouter.post('/new-password', 
 validationPassword,
+validationRecoveryCode,
 rateLimitMiddleware,
 async (req: Request, res: Response) => {
     const newPassword = req.body.newPassword

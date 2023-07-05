@@ -1,5 +1,6 @@
 export type AuthPasswordRecoveryType = {
     userId: string
     confirmationCode: string,
-    date: string
+    date: string,
+    isExpired: boolean
 }
