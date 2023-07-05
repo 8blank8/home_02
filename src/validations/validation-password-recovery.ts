@@ -15,7 +15,7 @@ export const validationEmail = [
 
 
 export const validationPassword = [
-    body('password')
+    body('newPassword')
         .notEmpty().withMessage('password is required')
         .isString()
         .trim()
