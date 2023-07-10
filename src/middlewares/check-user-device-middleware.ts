@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { JwtService } from "../application/jwt-service";
 import { STATUS_CODE } from "../enum/enumStatusCode";
 import { SecurityQueryRepository } from "../repositories/security-query-repository";
+import { jwtService } from "../composition-root/composition-root";
 
 
 export const checkUserDeviceMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const jwtService = new JwtService()
     const securityQueryRepository = new SecurityQueryRepository()
 
     const deviceId = req.params.id

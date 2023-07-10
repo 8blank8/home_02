@@ -6,12 +6,10 @@ import { AuthTokenType } from '../models/auth_models/AuthModel'
 
 export class JwtService {
 
-    authRepository: AuthRepository
-    usersQueryRepository: UsersQueryRepository
-    constructor(){
-        this.authRepository = new AuthRepository()
-        this.usersQueryRepository = new UsersQueryRepository()
-    }
+    constructor(
+        protected authRepository: AuthRepository, 
+        protected usersQueryRepository: UsersQueryRepository
+    ){}
 
     async createAccessToken(userId: string) {
         const token = jwt.sign({userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '10s'})

@@ -4,11 +4,8 @@ import { CommentType } from "../models/comment_models/CommentModel"
 import { CommentsRepository } from "../repositories/commets-repository"
 
 export class CommentsService {
-
-    commentsRepository: CommentsRepository
-    constructor(){
-        this.commentsRepository = new CommentsRepository()
-    }
+    
+    constructor(protected commentsRepository: CommentsRepository){}
 
     async createComment(comment: CommentCreateType){
         const createComment: CommentType = {

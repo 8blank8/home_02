@@ -9,14 +9,11 @@ import { SecurityQueryRepository } from "../repositories/security-query-reposito
 
 export class SecurityService {
 
-    jwtService: JwtService
-    securityRepository: SecurityRepository
-    securityQueryRepository: SecurityQueryRepository
-    constructor(){
-        this.jwtService = new JwtService()
-        this.securityQueryRepository = new SecurityQueryRepository()
-        this.securityRepository = new SecurityRepository()
-    }
+    constructor(
+        protected jwtService: JwtService,
+        protected securityRepository: SecurityRepository,
+        protected securityQueryRepository: SecurityQueryRepository
+    ){}
 
     async postDevice(device: DeviceDbType){
         const createdDevice: DeviceDbType = {

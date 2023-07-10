@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { STATUS_CODE } from "../enum/enumStatusCode";
 import { AuthRepository } from "../repositories/auth-repository";
-import { JwtService } from "../application/jwt-service";
+import { jwtService } from "../composition-root/composition-root";
 
 export const refreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const authRepository = new AuthRepository()
-    const jwtService = new JwtService()
 
     const refreshTokenCookie = req.cookies.refreshToken
     if(!refreshTokenCookie) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)

@@ -2,10 +2,7 @@ import { UsersRepository } from "../repositories/users-repository"
 
 export class UsersService {
 
-    usersRepository: UsersRepository
-    constructor(){
-        this.usersRepository = new UsersRepository()
-    }
+    constructor(protected usersRepository: UsersRepository){}
 
     async deleteUser(id: string){
         return await this.usersRepository.deleteUser(id)

@@ -16,19 +16,14 @@ import { UsersQueryRepository } from "../repositories/users-query-repository"
 
 
 export class AuthService {
-
-    passwordRecoveryRepository: PasswordRecoveryRepository
-    usersRepository: UsersRepository
-    usersQueryRepository: UsersQueryRepository
-    usersService: UsersService
-    emailService: EmailService
-    constructor(){
-        this.passwordRecoveryRepository = new PasswordRecoveryRepository()
-        this.usersRepository = new UsersRepository()
-        this.usersQueryRepository = new UsersQueryRepository()
-        this.usersService = new UsersService()
-        this.emailService = new EmailService()
-    }
+    
+    constructor(
+        protected passwordRecoveryRepository: PasswordRecoveryRepository,
+        protected usersRepository: UsersRepository,
+        protected usersQueryRepository: UsersQueryRepository,
+        protected usersService: UsersService,
+        protected emailService: EmailService
+    ){}
 
     async createUser(user: UserCreateType, isSuperAdmin: boolean){
 

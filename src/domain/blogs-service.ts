@@ -6,11 +6,8 @@ import { BlogsRepository } from "../repositories/blogs-repository";
 
 
 export class BlogsService {
-
-    blogsRepository: BlogsRepository
-    constructor(){
-        this.blogsRepository = new BlogsRepository()
-    }
+    
+    constructor(protected blogsRepository: BlogsRepository){}
 
     async createBlog(blog: BlogCrateType){
         const createdBlog: BlogsType = {
