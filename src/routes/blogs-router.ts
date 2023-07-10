@@ -11,40 +11,40 @@ import { DEFAULT_QUERY } from "../enum/enumDefaultQuery";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', async (req: Request, res: Response) => {
-    const { 
-        searchNameTerm, 
-        sortBy = DEFAULT_QUERY.SORT_BY, 
-        sortDirection = DEFAULT_QUERY.SORT_DIRECTION, 
-        pageNumber = DEFAULT_QUERY.PAGE_NUMBER, 
-        pageSize = DEFAULT_QUERY.PAGE_SIZE
-    } = req.query
-   
-
-    const blogs = await blogsQueryRepository.findBlogs({
-        searchNameTerm: searchNameTerm?.toString(),
-        pageNumber: +pageNumber,
-        pageSize: +pageSize,
-        sortBy: sortBy.toString(),
-        sortDirection: sortDirection
-    })
-    res.status(STATUS_CODE.OK_200).send(blogs)
-})
-
-blogsRouter.get('/:id', async (req: Request, res: Response) => {
-    const { id } = req.params
-
-    const blog = await blogsQueryRepository.findBlogsById(id)
-
-    if (blog) {
-        res.status(STATUS_CODE.OK_200).send(blog)
-    } else {
-        res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+class BlogController {
+    async getBlogs(req: Request, res: Response) {
+        const { 
+            searchNameTerm, 
+            sortBy = DEFAULT_QUERY.SORT_BY, 
+            sortDirection = DEFAULT_QUERY.SORT_DIRECTION, 
+            pageNumber = DEFAULT_QUERY.PAGE_NUMBER, 
+            pageSize = DEFAULT_QUERY.PAGE_SIZE
+        } = req.query
+       
+    
+        const blogs = await blogsQueryRepository.findBlogs({
+            searchNameTerm: searchNameTerm?.toString(),
+            pageNumber: +pageNumber,
+            pageSize: +pageSize,
+            sortBy: sortBy.toString(),
+            sortDirection: sortDirection
+        })
+        res.status(STATUS_CODE.OK_200).send(blogs)
     }
-})
 
-blogsRouter.get('/:id/posts',
-    async (req: Request, res: Response) => {
+    async getBlog(req: Request, res: Response) {
+        const { id } = req.params
+    
+        const blog = await blogsQueryRepository.findBlogsById(id)
+    
+        if (blog) {
+            res.status(STATUS_CODE.OK_200).send(blog)
+        } else {
+            res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+        }
+    }
+
+    async getPostsByBlogId(req: Request, res: Response) {
         const { id } = req.params
         const { 
             pageSize = DEFAULT_QUERY.PAGE_SIZE, 
@@ -68,24 +68,18 @@ blogsRouter.get('/:id/posts',
         }, id)
 
         res.status(STATUS_CODE.OK_200).send(posts)
-    })
+    }
 
-blogsRouter.post('/',
-    autorizationMiddleware,
-    validationCreateOrUpdateBlog,
-    async (req: Request, res: Response) => {
+    async createBlog(req: Request, res: Response) {
         const { name, description, websiteUrl } = req.body
 
         const cretatedBlogId = await blogsService.createBlog({ name, description, websiteUrl })
         const blog = await blogsQueryRepository.findBlogsById(cretatedBlogId)
 
         res.status(STATUS_CODE.CREATED_201).send(blog)
-    })
+    }
 
-blogsRouter.post('/:id/posts',
-    autorizationMiddleware,
-    validationCreateOrUpdatePostById,
-    async (req: Request, res: Response) => {
+    async createPostByBlogId(req: Request, res: Response) {
         const { id } = req.params
         const { title, shortDescription, content } = req.body
 
@@ -93,12 +87,9 @@ blogsRouter.post('/:id/posts',
         const post = await postsQueryRepository.findPostById(createdPostId)
 
         res.status(STATUS_CODE.CREATED_201).send(post)
-    })
+    }
 
-blogsRouter.put('/:id',
-    autorizationMiddleware,
-    validationCreateOrUpdateBlog,
-    async (req: Request, res: Response) => {
+    async updateBlog(req: Request, res: Response) {
         const { name, description, websiteUrl } = req.body
         const { id } = req.params
 
@@ -109,11 +100,9 @@ blogsRouter.put('/:id',
         } else {
             res.sendStatus(STATUS_CODE.NOT_FOUND_404)
         }
-    })
+    }
 
-blogsRouter.delete('/:id',
-    autorizationMiddleware,
-    async (req: Request, res: Response) => {
+    async deleteBlog(req: Request, res: Response) {
         const { id } = req.params
 
         const isDelete = await blogsService.deleteBlog(id)
@@ -123,4 +112,15 @@ blogsRouter.delete('/:id',
         } else {
             res.sendStatus(STATUS_CODE.NOT_FOUND_404)
         }
-    })
+    }
+}
+
+const blogController = new BlogController()
+
+blogsRouter.get('/', blogController.getBlogs)
+blogsRouter.get('/:id', blogController.getBlog)
+blogsRouter.get('/:id/posts', blogController.getPostsByBlogId)
+blogsRouter.post('/', autorizationMiddleware, validationCreateOrUpdateBlog, blogController.createBlog)
+blogsRouter.post('/:id/posts', autorizationMiddleware, validationCreateOrUpdatePostById, blogController.createPostByBlogId)
+blogsRouter.put('/:id', autorizationMiddleware, validationCreateOrUpdateBlog, blogController.updateBlog)
+blogsRouter.delete('/:id', autorizationMiddleware, blogController.deleteBlog)

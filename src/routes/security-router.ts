@@ -9,48 +9,49 @@ import { checkUserDeviceMiddleware } from "../middlewares/check-user-device-midd
 
 export const securityRouter = Router({})
 
-
-securityRouter.get('/devices', 
-refreshTokenMiddleware,
-async (req: Request, res: Response) => {
-
-    const refreshToken = req.cookies.refreshToken
-
-    const user = await jwtService.getFullUserByToken(refreshToken)
-    if(!user) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
-
-    const devices = await securityQueryRepository.findDevice(user.id)
-
-    return res
-            .status(STATUS_CODE.OK_200)
-            .send(devices)
-})
-
-securityRouter.delete('/devices', 
-refreshTokenMiddleware,
-async (req: Request, res: Response) => {
-    const refreshToken = req.cookies.refreshToken
-
-    const user = await jwtService.getFullUserByToken(refreshToken)
-    if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
-
-    const deviceId = await jwtService.getDeviceIdByToken(refreshToken)
-
-    await securityService.deleteDevices(user.id, deviceId)
-
-    return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
-})
-
-securityRouter.delete('/devices/:id',
-refreshTokenMiddleware,
-checkUserDeviceMiddleware,
-async (req: Request, res: Response) => {
+class SecurityController {
     
-    const deviceId = req.params.id
+    async getDevices(req: Request, res: Response) {
 
-    const isDeleleDevice = await securityService.deleteOneDevice(deviceId) 
-    if(!isDeleleDevice) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+        const refreshToken = req.cookies.refreshToken
+    
+        const user = await jwtService.getFullUserByToken(refreshToken)
+        if(!user) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+    
+        const devices = await securityQueryRepository.findDevice(user.id)
+    
+        return res
+                .status(STATUS_CODE.OK_200)
+                .send(devices)
+    }
 
-    return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+    async deleteDevices(req: Request, res: Response) {
+        const refreshToken = req.cookies.refreshToken
+    
+        const user = await jwtService.getFullUserByToken(refreshToken)
+        if(!user) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+    
+        const deviceId = await jwtService.getDeviceIdByToken(refreshToken)
+    
+        await securityService.deleteDevices(user.id, deviceId)
+    
+        return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+    }
 
-})
+    async deleteDevice(req: Request, res: Response) {
+    
+        const deviceId = req.params.id
+    
+        const isDeleleDevice = await securityService.deleteOneDevice(deviceId) 
+        if(!isDeleleDevice) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+    
+        return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+    
+    }
+}
+
+const securityController = new SecurityController()
+
+securityRouter.get('/devices', refreshTokenMiddleware, securityController.getDevices)
+securityRouter.delete('/devices', refreshTokenMiddleware, securityController.deleteDevices)
+securityRouter.delete('/devices/:id', refreshTokenMiddleware, checkUserDeviceMiddleware, securityController.deleteDevice)
