@@ -1,14 +1,13 @@
 import { PostUpdateType } from "../models/post_models/PostUpdateModel"
-// import { collectionPost } from "../db/db"
 import { PostModel } from "../db/db"
 import { PostCreateForDBType } from "../models/post_models/PostCreateForDBModel"
 
 
-export const postsRepository = {
+class PostsRepository {
 
     async createPost(post: PostCreateForDBType){
         return await PostModel.insertMany(post)
-    },
+    }
 
     async updatePost(post: PostUpdateType){
 
@@ -20,17 +19,19 @@ export const postsRepository = {
         }})
 
         return res.matchedCount === 1
-    },
+    }
 
     async deletePost(id: string){
 
         const res = await PostModel.deleteOne({id})
         
         return res.deletedCount === 1
-    },
+    }
 
     async deleteAllPosts(){
         await PostModel.deleteMany({})
         return true
     }
 }
+
+export const postsRepository = new PostsRepository()

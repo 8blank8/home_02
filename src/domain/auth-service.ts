@@ -11,7 +11,7 @@ import { passwordRecoveryRepository } from "../repositories/password-recovery-re
 import { AuthPasswordRecoveryType } from "../models/auth_models/AuthPasswordRecovery"
 import { usersService } from "./users-service"
 
-export const authService = {
+class AuthService {
 
     async createUser(user: UserCreateType, isSuperAdmin: boolean){
 
@@ -42,7 +42,7 @@ export const authService = {
         }
 
         return createUser.id
-    },
+    }
 
     async checkCredentials(data: UserLoginType){
         const user = await usersQueryRepository.findUserByLoginOrEmail(data.loginOrEmail)
@@ -53,14 +53,14 @@ export const authService = {
         if(!await bcrypt.compare(data.password, user.acountData.passwordHash)) return false
 
         return user
-    },
+    }
 
     async _generateHash(password: string){
         const salt = await bcrypt.genSalt(10)
 
         const hash = await bcrypt.hash(password, salt)
         return hash
-    },
+    }
 
     async confirmationCode(code: string){
         const user = await usersQueryRepository.findUserByConfirmationCode(code)
@@ -70,7 +70,7 @@ export const authService = {
         if(user.emailConfirmation.confirmationCode !== code) return false
         if(user.emailConfirmation.expirationDate < new Date()) return false
         return await usersRepository.updateIsConfirmation(user.id)
-    },
+    }
 
     async resendConfirmationCode(email: string){
 
@@ -84,7 +84,7 @@ export const authService = {
 
         await emailService.sendEmailConfirmationMessage(user.acountData.email, code)
         return true
-    },   
+    }
 
     async sendEmailPasswordRecovery(email: string){
         
@@ -105,7 +105,7 @@ export const authService = {
         await passwordRecoveryRepository.createPasswordRecoveryCode(newPasswordRecoveryData)
 
         return true
-    },
+    }
 
     async updatePassword( recoveryCode: string, newPassword: string){
         const passwordRecoveryData = await passwordRecoveryRepository.checkRecoveryCode(recoveryCode)
@@ -122,5 +122,7 @@ export const authService = {
         return true
     }
 
-
 }
+
+export const authService = new AuthService()
+

@@ -1,13 +1,10 @@
-import { DEFAULT_QUERY } from "../enum/enumDefaultQuery";
-import { Sort } from "../models/post_models/PostAndBlogSortModel";
 import { UserFindType } from "../models/user_models/UserFindModel";
-// import { collectionUser } from "../db/db";
 import { UserModel } from "../db/db";
 import { UserType } from "../models/user_models/UserModel";
 import { UserViewType } from "../models/user_models/UserViewModel";
 
 
-export const usersQueryRepository = {
+class UsersQueryRepository {
     async findUsers(option: UserFindType){
 
         const {searchEmailTerm, searchLoginTerm, pageNumber, pageSize, sortBy, sortDirection} = option
@@ -39,11 +36,11 @@ export const usersQueryRepository = {
             totalCount: usersCount,
             items: users.map((user)=> this._mapUser(user))
         }
-    },
+    }
 
     async getFullUserById(id: string) {
         return UserModel.findOne({id: id})
-    },
+    }
 
     async findUserById(id: string){
         const user = await UserModel.findOne({id: id})
@@ -51,21 +48,21 @@ export const usersQueryRepository = {
         if(!user) return false
 
         return this._mapUser(user)
-    },
+    }
 
     async findFullUserByEmail(email: string) {
         const user = await UserModel.findOne({"acountData.email": email})
         return user
-    },
+    }
 
     async findUserByConfirmationCode(code: string){
         return await UserModel.findOne({"emailConfirmation.confirmationCode": code})
-    },  
+    } 
 
     async findUserByLoginOrEmail(loginOrEmail: string){
         const user = await UserModel.findOne({$or: [{"acountData.email": loginOrEmail}, {"acountData.login": loginOrEmail}]})
         return user
-    },
+    }
 
     _mapUser(user: UserType): UserViewType{
         return {
@@ -76,3 +73,5 @@ export const usersQueryRepository = {
         }
     }
 }
+
+export const usersQueryRepository = new UsersQueryRepository()

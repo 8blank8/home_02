@@ -1,4 +1,3 @@
-// import { collectionComment } from "../db/db"
 import { CommentModel } from "../db/db"
 import { DEFAULT_QUERY } from "../enum/enumDefaultQuery"
 import { CommentFindType } from "../models/comment_models/CommentFindModel"
@@ -7,14 +6,14 @@ import { CommentViewType } from "../models/comment_models/CommentViewModel"
 import { Sort } from "../models/post_models/PostAndBlogSortModel"
 
 
-export const commentsQueryRepository = {
+class CommentsQueryRepository {
     async findCommentById(id: string){
         const comment = await CommentModel.findOne({id})
         
         if(!comment) return null
 
         return this._mapComment(comment)
-    },
+    }
 
     async findComments(id: string, option: CommentFindType){
 
@@ -47,7 +46,7 @@ export const commentsQueryRepository = {
             totalCount: postCount,
             items: comments.map(this._mapComment)
         }
-    },
+    }
 
     _mapComment(comment: CommentType): CommentViewType{
         return {
@@ -61,3 +60,5 @@ export const commentsQueryRepository = {
         }
     }
 }
+
+export const commentsQueryRepository = new CommentsQueryRepository()

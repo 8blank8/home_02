@@ -4,7 +4,7 @@ import { BlogUpdateType } from "../models/blog_models/BlogUpdateModel";
 import { blogsRepository } from "../repositories/blogs-repository";
 
 
-export const blogsService = {
+class BlogsService {
 
     async createBlog(blog: BlogCrateType){
         const createdBlog: BlogsType = {
@@ -17,19 +17,19 @@ export const blogsService = {
         await blogsRepository.createBlog(createdBlog)
 
         return createdBlog.id
-    },
-
-    
+    }
 
     async updateBlog(blog: BlogUpdateType){
         return await blogsRepository.updateBlog(blog)
-    },
+    }
 
     async deleteBlog(id: string){
         return await blogsRepository.deleteBlog(id)
-    },
+    }
 
     async deleteAllBlogs(){
         return await blogsRepository.deleteAllBlogs()
     }
 }
+
+export const blogsService = new BlogsService()

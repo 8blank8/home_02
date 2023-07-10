@@ -1,4 +1,3 @@
-// import { collectionBlog } from "../db/db"
 import { BlogModel } from "../db/db"
 import { BlogFindType } from "../models/blog_models/BlogFindModel"
 
@@ -6,7 +5,7 @@ const optionsCollection = {
     projection: {_id: 0}
 } 
 
-export const blogsQueryRepository = {
+class BlogsQueryRepository {
     async findBlogs(option: BlogFindType){
 
         const {searchNameTerm, sortBy, sortDirection, pageNumber, pageSize} = option
@@ -33,9 +32,11 @@ export const blogsQueryRepository = {
             totalCount: blogCount,
             items: blogs
         }
-    },
+    }
 
     async findBlogsById(id: string){
         return await BlogModel.findOne({id: id}, optionsCollection)
     }
 }
+
+export const blogsQueryRepository = new BlogsQueryRepository()

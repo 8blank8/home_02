@@ -1,4 +1,3 @@
-// import { collectionPost } from "../db/db"
 import { PostModel } from "../db/db"
 import { PostFindType } from "../models/post_models/PostFindModel"
 
@@ -7,7 +6,7 @@ const optionsCollection = {
     projection: {_id: 0}
 } 
 
-export const postsQueryRepository = {
+class PostsQueryRepository {
     async findPosts(option: PostFindType, id?: string){
 
         const {pageNumber, pageSize, sortBy, sortDirection} = option
@@ -33,9 +32,11 @@ export const postsQueryRepository = {
             totalCount: postCount,
             items: post
         }
-    },
+    }
 
     async findPostById(id: string){
         return PostModel.findOne({id}, optionsCollection)
-    },
+    }
 }
+
+export const postsQueryRepository = new PostsQueryRepository()
