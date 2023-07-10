@@ -4,7 +4,7 @@ import { UserType } from "../models/user_models/UserModel";
 import { UserViewType } from "../models/user_models/UserViewModel";
 
 
-class UsersQueryRepository {
+export class UsersQueryRepository {
     async findUsers(option: UserFindType){
 
         const {searchEmailTerm, searchLoginTerm, pageNumber, pageSize, sortBy, sortDirection} = option
@@ -73,5 +73,3 @@ class UsersQueryRepository {
         }
     }
 }
-
-export const usersQueryRepository = new UsersQueryRepository()

@@ -2,7 +2,7 @@ import { CommentModel } from "../db/db";
 import { CommentType } from "../models/comment_models/CommentModel";
 
 
-class CommentsRepository {
+export class CommentsRepository {
     async createComment(comment: CommentType){
         await CommentModel.insertMany(comment)
     }
@@ -22,5 +22,3 @@ class CommentsRepository {
         await CommentModel.deleteMany({})
     }
 }
-
-export const commentsRepository = new CommentsRepository()

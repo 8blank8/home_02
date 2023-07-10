@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { STATUS_CODE } from "../enum/enumStatusCode";
-import { jwtService } from "../application/jwt-service";
+import { JwtService } from "../application/jwt-service";
 
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const jwtService = new JwtService()
+    
     const auth = req.headers.authorization
     if(!auth) return res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
         

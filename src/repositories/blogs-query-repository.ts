@@ -5,7 +5,7 @@ const optionsCollection = {
     projection: {_id: 0}
 } 
 
-class BlogsQueryRepository {
+export class BlogsQueryRepository {
     async findBlogs(option: BlogFindType){
 
         const {searchNameTerm, sortBy, sortDirection, pageNumber, pageSize} = option
@@ -38,5 +38,3 @@ class BlogsQueryRepository {
         return await BlogModel.findOne({id: id}, optionsCollection)
     }
 }
-
-export const blogsQueryRepository = new BlogsQueryRepository()

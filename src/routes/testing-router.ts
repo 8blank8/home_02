@@ -1,18 +1,38 @@
 import { Router, Request, Response } from "express";
-import { postsRepository } from "../repositories/posts-repository";
-import { blogsRepository } from "../repositories/blogs-repository";
-import { usersRepository } from "../repositories/users-repository";
-import { commentsRepository } from "../repositories/commets-repository";
-import { securityRepository } from "../repositories/security-respository";
+import { PostsRepository } from "../repositories/posts-repository";
+import { BlogsRepository } from "../repositories/blogs-repository";
+import { UsersRepository } from "../repositories/users-repository";
+import { CommentsRepository } from "../repositories/commets-repository";
+import { SecurityRepository } from "../repositories/security-respository";
 
 export const testingRouter = Router({})
 
-testingRouter.delete('/', async (req: Request, res: Response) => {
-    await postsRepository.deleteAllPosts()
-    await blogsRepository.deleteAllBlogs()
-    await usersRepository.deleteAllUsers()
-    await commentsRepository.deleteAllComments()
-    await securityRepository.deleteAllDevice()
-        
-    return res.sendStatus(204)
- })
+class TestingController {
+
+    postsRepository: PostsRepository
+    blogsRepository: BlogsRepository
+    usersRepository: UsersRepository
+    commentsRepository: CommentsRepository
+    securityRepository: SecurityRepository
+    constructor(){
+        this.postsRepository = new PostsRepository()
+        this.blogsRepository = new BlogsRepository()
+        this.usersRepository = new UsersRepository()
+        this.commentsRepository = new CommentsRepository()
+        this.securityRepository = new SecurityRepository()
+    }
+
+    async deleteAllData(req: Request, res: Response) {
+        await this.postsRepository.deleteAllPosts()
+        await this.blogsRepository.deleteAllBlogs()
+        await this.usersRepository.deleteAllUsers()
+        await this.commentsRepository.deleteAllComments()
+        await this.securityRepository.deleteAllDevice()
+            
+        return res.sendStatus(204)
+     }
+}
+
+const testingController = new TestingController()
+
+testingRouter.delete('/', testingController.deleteAllData.bind(testingController))

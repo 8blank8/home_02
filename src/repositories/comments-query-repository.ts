@@ -6,7 +6,7 @@ import { CommentViewType } from "../models/comment_models/CommentViewModel"
 import { Sort } from "../models/post_models/PostAndBlogSortModel"
 
 
-class CommentsQueryRepository {
+export class CommentsQueryRepository {
     async findCommentById(id: string){
         const comment = await CommentModel.findOne({id})
         
@@ -60,5 +60,3 @@ class CommentsQueryRepository {
         }
     }
 }
-
-export const commentsQueryRepository = new CommentsQueryRepository()

@@ -1,15 +1,18 @@
-import { usersRepository } from "../repositories/users-repository"
+import { UsersRepository } from "../repositories/users-repository"
 
-class UsersService {
+export class UsersService {
+
+    usersRepository: UsersRepository
+    constructor(){
+        this.usersRepository = new UsersRepository()
+    }
 
     async deleteUser(id: string){
-        return await usersRepository.deleteUser(id)
+        return await this.usersRepository.deleteUser(id)
     }
 
     async updatePassword(id: string, passwordHash: string){
-        return await usersRepository.updatePassword(id, passwordHash)
+        return await this.usersRepository.updatePassword(id, passwordHash)
     }
 
 }
-
-export const usersService = new UsersService()

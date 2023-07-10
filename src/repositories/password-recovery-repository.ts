@@ -2,7 +2,7 @@ import { PasswordRecoveryModel } from "../db/db";
 import { AuthPasswordRecoveryType } from "../models/auth_models/AuthPasswordRecovery";
 
 
-class PasswordRecoveryRepository {
+export class PasswordRecoveryRepository {
     async createPasswordRecoveryCode(data: AuthPasswordRecoveryType){
         return await PasswordRecoveryModel.insertMany(data)
     }
@@ -16,5 +16,3 @@ class PasswordRecoveryRepository {
         return res.matchedCount === 1
     }
 }
-
-export const passwordRecoveryRepository = new PasswordRecoveryRepository()

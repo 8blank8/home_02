@@ -2,7 +2,7 @@ import { UserType } from "../models/user_models/UserModel";
 import { UserModel } from "../db/db";
 
 
-class UsersRepository {
+export class UsersRepository {
     async createUser(user: UserType){
        return await UserModel.insertMany(user)
     }
@@ -32,5 +32,3 @@ class UsersRepository {
         return res.matchedCount === 1
     }
 }
-
-export const usersRepository = new UsersRepository()

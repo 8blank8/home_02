@@ -2,7 +2,7 @@ import { DeviceModel } from "../db/db"
 import { DeviceDbType } from "../models/security/deviceDbModel"
 
 
-class SecurityQueryRepository {
+export class SecurityQueryRepository {
     async findDevice(userId: string){
         const device = await DeviceModel.find({userId: userId}).lean()
         if(!device) return null
@@ -27,5 +27,3 @@ class SecurityQueryRepository {
         return await DeviceModel.findOne({deviceId: deviceId})
     }
 }
-
-export const securityQueryRepository = new SecurityQueryRepository()

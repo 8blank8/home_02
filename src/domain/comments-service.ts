@@ -1,8 +1,15 @@
 import { CommentCreateType } from "../models/comment_models/CommentCreateModel"
 import { CommentType } from "../models/comment_models/CommentModel"
-import { commentsRepository } from "../repositories/commets-repository"
 
-class CommentsService {
+import { CommentsRepository } from "../repositories/commets-repository"
+
+export class CommentsService {
+
+    commentsRepository: CommentsRepository
+    constructor(){
+        this.commentsRepository = new CommentsRepository()
+    }
+
     async createComment(comment: CommentCreateType){
         const createComment: CommentType = {
             id: (+(new Date())).toString(),
@@ -15,18 +22,16 @@ class CommentsService {
             createdAt: new Date().toISOString()
         }
 
-        await commentsRepository.createComment(createComment)
+        await this.commentsRepository.createComment(createComment)
 
         return createComment.id
     }
 
     async updateComment(id: string, content: string){
-        return await commentsRepository.updateComment(id, content)
+        return await this.commentsRepository.updateComment(id, content)
     }
 
     async deleteComment(id: string){
-        return await commentsRepository.deleteComment(id)
+        return await this.commentsRepository.deleteComment(id)
     }
 }
-
-export const commentsService = new CommentsService()

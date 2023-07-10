@@ -1,11 +1,23 @@
 import { DeviceDbType } from "../models/security/deviceDbModel"
-import { securityRepository } from "../repositories/security-respository"
-import { securityQueryRepository } from "../repositories/security-query-repository"
-import { jwtService } from "../application/jwt-service"
 import { DeviceDateType } from "../models/security/deviceDateModel"
 
+import { JwtService } from "../application/jwt-service"
 
-class SecurityService {
+import { SecurityRepository } from "../repositories/security-respository"
+import { SecurityQueryRepository } from "../repositories/security-query-repository"
+
+
+export class SecurityService {
+
+    jwtService: JwtService
+    securityRepository: SecurityRepository
+    securityQueryRepository: SecurityQueryRepository
+    constructor(){
+        this.jwtService = new JwtService()
+        this.securityQueryRepository = new SecurityQueryRepository()
+        this.securityRepository = new SecurityRepository()
+    }
+
     async postDevice(device: DeviceDbType){
         const createdDevice: DeviceDbType = {
             ip: device.ip,
@@ -15,19 +27,19 @@ class SecurityService {
             deviceId: device.deviceId,
             userId: device.userId
         }
-        return await securityRepository.postDevice(createdDevice)
+        return await this.securityRepository.postDevice(createdDevice)
     }
 
     async deleteDevices(userId: string, deviceId: string){
-        return await securityRepository.deleteDevices(userId, deviceId)
+        return await this.securityRepository.deleteDevices(userId, deviceId)
     }
 
     async deleteOneDevice(deviceId: string){
-        return await securityRepository.deleteOneDevice(deviceId)
+        return await this.securityRepository.deleteOneDevice(deviceId)
     }
 
     async checkDeletingDevice(userId: string, deviceId: string){
-        const device = await securityQueryRepository.findOneDevice(deviceId)
+        const device = await this.securityQueryRepository.findOneDevice(deviceId)
         if(!device) return false
         
         if(device.userId !== userId) return false
@@ -36,19 +48,19 @@ class SecurityService {
     }
 
     async updateDates(token: string){
-        const deviceId = await jwtService.getDeviceIdByToken(token)
-        const user = await jwtService.getFullUserByToken(token)
+        const deviceId = await this.jwtService.getDeviceIdByToken(token)
+        const user = await this.jwtService.getFullUserByToken(token)
         if(!user) return false
 
-        const newAccessToken = await jwtService.createAccessToken(user.id)
-        const newRefreshToken = await jwtService.createRefreshToken(deviceId, user.id)
+        const newAccessToken = await this.jwtService.createAccessToken(user.id)
+        const newRefreshToken = await this.jwtService.createRefreshToken(deviceId, user.id)
 
         const dateObj: DeviceDateType = {
             lastActiveDate: new Date().toISOString(),
             experationDate: new Date().toISOString()
         }
 
-        const isUpdate = await securityRepository.updateDates(deviceId, dateObj)
+        const isUpdate = await this.securityRepository.updateDates(deviceId, dateObj)
         if(!isUpdate) return false
 
         return {
@@ -57,5 +69,3 @@ class SecurityService {
         }
     }
 }
-
-export const securityService = new SecurityService()

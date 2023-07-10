@@ -3,7 +3,7 @@ import { PostModel } from "../db/db"
 import { PostCreateForDBType } from "../models/post_models/PostCreateForDBModel"
 
 
-class PostsRepository {
+export class PostsRepository {
 
     async createPost(post: PostCreateForDBType){
         return await PostModel.insertMany(post)
@@ -33,5 +33,3 @@ class PostsRepository {
         return true
     }
 }
-
-export const postsRepository = new PostsRepository()

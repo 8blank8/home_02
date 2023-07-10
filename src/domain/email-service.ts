@@ -1,7 +1,7 @@
 import { emailManager } from "../managers/email-manager"
 
 
-class EmailService {
+export class EmailService {
     async sendPasswordRecovery(email: string, code: string){
         await emailManager.sendPasswordRecovery(email, code)
     }
@@ -10,5 +10,3 @@ class EmailService {
         await emailManager.sendEmailConfirmationMessage(email, code)
     }
 }
-
-export const emailService = new EmailService()

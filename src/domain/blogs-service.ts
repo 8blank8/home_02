@@ -1,10 +1,16 @@
 import { BlogsType } from "../models/blog_models/BlogsModel";
 import { BlogCrateType } from "../models/blog_models/BlogCreateModel";
 import { BlogUpdateType } from "../models/blog_models/BlogUpdateModel";
-import { blogsRepository } from "../repositories/blogs-repository";
+
+import { BlogsRepository } from "../repositories/blogs-repository";
 
 
-class BlogsService {
+export class BlogsService {
+
+    blogsRepository: BlogsRepository
+    constructor(){
+        this.blogsRepository = new BlogsRepository()
+    }
 
     async createBlog(blog: BlogCrateType){
         const createdBlog: BlogsType = {
@@ -14,22 +20,20 @@ class BlogsService {
             ...blog
         }
 
-        await blogsRepository.createBlog(createdBlog)
+        await this.blogsRepository.createBlog(createdBlog)
 
         return createdBlog.id
     }
 
     async updateBlog(blog: BlogUpdateType){
-        return await blogsRepository.updateBlog(blog)
+        return await this.blogsRepository.updateBlog(blog)
     }
 
     async deleteBlog(id: string){
-        return await blogsRepository.deleteBlog(id)
+        return await this.blogsRepository.deleteBlog(id)
     }
 
     async deleteAllBlogs(){
-        return await blogsRepository.deleteAllBlogs()
+        return await this.blogsRepository.deleteAllBlogs()
     }
 }
-
-export const blogsService = new BlogsService()

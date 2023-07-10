@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { commentsQueryRepository } from "../repositories/comments-query-repository";
+import { CommentsQueryRepository } from "../repositories/comments-query-repository";
 import { STATUS_CODE } from "../enum/enumStatusCode";
 
 export const commentCheckUserMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const commentsQueryRepository = new CommentsQueryRepository()
+
     const id = req.params.id
 
     const comment = await commentsQueryRepository.findCommentById(id)

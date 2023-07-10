@@ -7,7 +7,7 @@ const optionsCollection = {
     projection: {_id: 0}
 } 
 
-class BlogsRepository {
+export class BlogsRepository {
 
     async findBlogsById(id: string){
         return await BlogModel.findOne({id}, optionsCollection )
@@ -38,5 +38,3 @@ class BlogsRepository {
         return true
     }
 }
-
-export const blogsRepository = new BlogsRepository()

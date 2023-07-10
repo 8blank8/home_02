@@ -3,7 +3,7 @@ import { DeviceDateType } from "../models/security/deviceDateModel";
 import { DeviceDbType } from "../models/security/deviceDbModel";
 
 
-class SecurityRepository {
+export class SecurityRepository {
     async postDevice(device: DeviceDbType){
         return await DeviceModel.insertMany(device)
     }
@@ -26,5 +26,3 @@ class SecurityRepository {
         return await DeviceModel.deleteMany({})
     }
 }
-
-export const securityRepository = new SecurityRepository()

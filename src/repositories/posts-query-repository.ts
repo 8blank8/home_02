@@ -6,7 +6,7 @@ const optionsCollection = {
     projection: {_id: 0}
 } 
 
-class PostsQueryRepository {
+export class PostsQueryRepository {
     async findPosts(option: PostFindType, id?: string){
 
         const {pageNumber, pageSize, sortBy, sortDirection} = option
@@ -38,5 +38,3 @@ class PostsQueryRepository {
         return PostModel.findOne({id}, optionsCollection)
     }
 }
-
-export const postsQueryRepository = new PostsQueryRepository()

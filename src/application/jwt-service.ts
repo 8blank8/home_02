@@ -1,43 +1,49 @@
 import jwt from 'jsonwebtoken'
-import { UserType } from '../models/user_models/UserModel'
 import { settingEnv } from '../setting-env'
-import { authRepository } from '../repositories/auth-repository'
-import { usersQueryRepository } from '../repositories/users-query-repository'
+import { AuthRepository } from '../repositories/auth-repository'
+import { UsersQueryRepository } from '../repositories/users-query-repository'
 import { AuthTokenType } from '../models/auth_models/AuthModel'
-import { DeviceDateType } from '../models/security/deviceDateModel'
 
-export const jwtService = {
+export class JwtService {
+
+    authRepository: AuthRepository
+    usersQueryRepository: UsersQueryRepository
+    constructor(){
+        this.authRepository = new AuthRepository()
+        this.usersQueryRepository = new UsersQueryRepository()
+    }
+
     async createAccessToken(userId: string) {
         const token = jwt.sign({userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '10s'})
 
         return {accessToken: token}
-    },
+    }
 
     async createRefreshToken(deviceId: string, userId: string){
         const refreshToken = jwt.sign({deviceId: deviceId, userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '20s'})
 
         return refreshToken
-    },
+    }
 
     async getUserByToken(token: string){
         try {
             const result: any = jwt.verify(token, settingEnv.JWT_SECRET)
-            const user = await usersQueryRepository.findUserById(result.userId)
+            const user = await this.usersQueryRepository.findUserById(result.userId)
             return user
         } catch{
             return null
         }
-    },
+    }
 
     async getFullUserByToken(token: string){
         try {
             const result: any = jwt.verify(token, settingEnv.JWT_SECRET)
-            const user = await usersQueryRepository.getFullUserById(result.userId)
+            const user = await this.usersQueryRepository.getFullUserById(result.userId)
             return user
         } catch{
             return null
         }
-    },
+    }
 
     async checkExperedToken(token: string){
        try {
@@ -46,31 +52,15 @@ export const jwtService = {
        } catch {
             return false
        }
-    },
+    }
 
     async postRefreshToken(token: string){
         const createdToken: AuthTokenType = {
             refreshToken: token
         }
 
-        return await authRepository.postRefreshToken(createdToken)
-    },
-
-    // async getDatesToken(token: string){
-    //     try {
-
-    //         const t: any = jwt.verify(token, settingEnv.JWT_SECRET)
-    //         const date: DeviceDateType = {
-    //             iat: new Date(t.iat).toISOString(),
-    //             exp: new Date(t.iat).toISOString()
-    //         }
-
-    //         return date
-            
-    //     } catch {
-    //         return false
-    //     }
-    // },
+        return await this.authRepository.postRefreshToken(createdToken)
+    }
 
     async getDeviceIdByToken(token: string){
         try {
