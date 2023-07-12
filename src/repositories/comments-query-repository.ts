@@ -11,7 +11,6 @@ export class CommentsQueryRepository {
 
     async findCommentById(id: string, userId: string | undefined){
         const comment = await CommentModel.findOne({id})
-        
         if(!comment) return null
 
         return await this._mapComment(comment, userId)
@@ -40,18 +39,25 @@ export class CommentsQueryRepository {
             .lean()
 
         const postCount = (await CommentModel.find(filter).lean()).length
-
+        
         return {
             pagesCount: Math.ceil(postCount / pageSize),
             page: pageNumber,
             pageSize: pageSize,
             totalCount: postCount,
-            items: comments.map(async item => await this._mapComment(item, userId))
+            items: await Promise.all(comments.map(async item => await this._mapComment(item, userId))) 
         }
     }
 
     async _mapComment(comment: CommentType, userId: string | undefined){
-        let likeStatus: string | null = userId ? await CommentLikesModel.findOne({userId: userId, commentId: comment.id}) : LIKE_STATUS.NONE
+        let likeStatus: string = LIKE_STATUS.NONE
+
+        if(userId){
+            const status = await CommentLikesModel.findOne({userId: userId, commentId: comment.id})
+            if(status){
+                likeStatus = status.status
+            }
+        }
 
         return {
             id: comment.id,

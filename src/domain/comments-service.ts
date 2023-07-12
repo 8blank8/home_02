@@ -45,7 +45,6 @@ export class CommentsService {
 
     async updateLikeStatus(commentId: string, likeStatus: string, userId: string){
         const commentLike = await this.commentLikesRepository.getMyStatusLike(userId, commentId)
-        console.log(commentLike)
         if(!commentLike){
             const newCommentLike: CommentLikesDBType = {
                 commentId: commentId,
@@ -56,7 +55,7 @@ export class CommentsService {
             await this.commentLikesRepository.createLikes(newCommentLike)
             return true
         }
-        
+
         let newLikeStatus: string = LIKE_STATUS.NONE
 
         switch(likeStatus){
@@ -74,10 +73,13 @@ export class CommentsService {
             }
         }
 
-        return await this.commentLikesRepository.updateMyStatus({
+        const update = await this.commentLikesRepository.updateMyStatus({
             commentId: commentId,
             userId: userId,
             status: newLikeStatus
         })
+
+        console.log(update)
+        return true
     }
 }

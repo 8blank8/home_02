@@ -14,6 +14,7 @@ export class CommentLikesRepository {
     }
 
     async updateMyStatus(data: CommentLikesDBType){
-        const res = await CommentLikesModel.updateOne({})
+        const res = await CommentLikesModel.updateOne({commentId: data.commentId, userId: data.userId}, {$set:{status: data.status}})
+        return res.matchedCount === 1
     }
 }
