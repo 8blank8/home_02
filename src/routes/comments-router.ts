@@ -35,7 +35,7 @@ commentsRouter.put(
 commentsRouter.put(
     '/:id/like-status',
     rateLimitMiddleware,
-    validationCommentLikes,
     authMiddleware,
+    validationCommentLikes,
     commentController.updateLikeStatusComment.bind(commentController)
 )
