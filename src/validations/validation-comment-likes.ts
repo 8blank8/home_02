@@ -9,11 +9,12 @@ export const validationCommentLikes = [
         .trim()
         .isString()
         .withMessage('should be type string')
-        .custom((likeStatus)=> {
-            console.log(likeStatus)
-            if(likeStatus !== LIKE_STATUS.LIKE || likeStatus !== LIKE_STATUS.DISLIKE || likeStatus !== LIKE_STATUS.NONE){
-                throw Error('data should be ["Like", "Dislike", "None"]')
+        .custom((likeStatus) => {
+            const res = [LIKE_STATUS.LIKE, LIKE_STATUS.DISLIKE, LIKE_STATUS.NONE].find(item => likeStatus === item)
+            if(!res){
+                throw Error('incorrect data')
             }
+            return true
         }),
     inputValidationMiddleware
 ]
