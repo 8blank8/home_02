@@ -12,13 +12,13 @@ export class JwtService {
     ){}
 
     async createAccessToken(userId: string) {
-        const token = jwt.sign({userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '10s'})
+        const token = jwt.sign({userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '10m'})
 
         return {accessToken: token}
     }
 
     async createRefreshToken(deviceId: string, userId: string){
-        const refreshToken = jwt.sign({deviceId: deviceId, userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '20s'})
+        const refreshToken = jwt.sign({deviceId: deviceId, userId: userId}, settingEnv.JWT_SECRET, {expiresIn: '20m'})
 
         return refreshToken
     }

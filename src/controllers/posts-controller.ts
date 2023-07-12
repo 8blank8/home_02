@@ -83,6 +83,7 @@ export class PostController {
     async createCommentByPostId(req: Request, res: Response) {
         const id = req.params.id
         const content = req.body.content
+        const userId = req.user?.id
     
         const isPost = await this.postsQueryRepository.findPostById(id)
     
@@ -97,7 +98,7 @@ export class PostController {
             }
         })
     
-        const comment = await this.commentsQueryRepository.findCommentById(commentId)
+        const comment = await this.commentsQueryRepository.findCommentById(commentId, userId)
     
         return res.status(STATUS_CODE.CREATED_201).send(comment)
     }
@@ -105,6 +106,7 @@ export class PostController {
     async getCommentByPostId(req: Request, res: Response) {
         const id = req.params.id
         const {pageNumber, pageSize, sortBy, sortDirection} = req.query
+        const userId = req.user?.id
     
         const isPost = await this.postsQueryRepository.findPostById(id)
     
@@ -115,7 +117,8 @@ export class PostController {
             sortBy: sortBy?.toString(),
             sortDirection: sortDirection,
             pageSize: pageSize?.toString()
-        })
+        }, 
+        userId)
     
         return res.status(STATUS_CODE.OK_200).send(comments)
     }

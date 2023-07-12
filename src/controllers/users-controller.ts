@@ -17,7 +17,8 @@ export class UserController {
 
     async createUser(req: Request, res: Response) {
         const {login, email, password} = req.body
-    
+        console.log(login, email, password);
+        
         const createdUserId = await this.authService.createUser({login, email, password}, true)
     
         const user = await this.usersQueryRepository.findUserById(createdUserId)

@@ -1,6 +1,8 @@
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { body, param } from "express-validator";
-import { blogsQueryRepository } from "../repositories/blogs-query-repository";
+import { BlogsQueryRepository } from "../repositories/blogs-query-repository";
+
+const blogsQueryRepository = new BlogsQueryRepository()
 
 const validationCreateOrUpdatePost = [
     body('title')

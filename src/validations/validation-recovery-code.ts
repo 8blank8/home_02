@@ -1,6 +1,8 @@
 import { body } from "express-validator";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
-import { passwordRecoveryRepository } from "../repositories/password-recovery-repository";
+import { PasswordRecoveryRepository } from "../repositories/password-recovery-repository";
+
+const passwordRecoveryRepository = new PasswordRecoveryRepository()
 
 export const validationRecoveryCode = [
     body('recoveryCode')

@@ -6,4 +6,11 @@ export type CommentViewType = {
         userLogin: string
     },
     createdAt: string
+    likesInfo: LikesInfo
+}
+
+type LikesInfo = {
+    likesCount: number
+    dislikesCount: number
+    myStatus: string
 }

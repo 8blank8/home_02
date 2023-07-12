@@ -25,6 +25,7 @@ import { PostController } from "../controllers/posts-controller";
 import { SecurityController } from "../controllers/security-controller";
 import { UserController } from "../controllers/users-controller";
 import { TestingController } from "../controllers/testing-controller";
+import { CommentLikesRepository } from "../repositories/comment-likes-repository";
 
 
 const usersQueryRepository = new UsersQueryRepository()
@@ -40,10 +41,11 @@ const securityRepository = new SecurityRepository()
 const blogsRepository = new BlogsRepository()
 const postsRepository = new PostsRepository()
 const commentsRepository = new CommentsRepository()
+const commentLikesRepository = new CommentLikesRepository()
 
 const emailService = new EmailService()
 const usersService = new UsersService(usersRepository)
-const commentsService = new CommentsService(commentsRepository)
+const commentsService = new CommentsService(commentsRepository, commentLikesRepository)
 const blogsService = new BlogsService(blogsRepository)
 const postsService = new PostsService(blogsRepository, postsRepository)
 const authService = new AuthService(passwordRecoveryRepository, usersRepository, usersQueryRepository, usersService, emailService) 

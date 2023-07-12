@@ -7,7 +7,7 @@ export const commentCheckUserMiddleware = async (req: Request, res: Response, ne
 
     const id = req.params.id
 
-    const comment = await commentsQueryRepository.findCommentById(id)
+    const comment = await commentsQueryRepository.findCommentById(id, req.user!.id)
 
     if(!comment) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
 

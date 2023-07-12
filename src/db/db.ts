@@ -10,6 +10,8 @@ import { AuthTokenType } from "../models/auth_models/AuthModel";
 import { DeviceDbType } from "../models/security/deviceDbModel";
 import { RateLimitType } from "../models/rate_limit/rateLimitDbModel";
 import {AuthPasswordRecoveryType } from "../models/auth_models/AuthPasswordRecovery";
+import { LIKE_STATUS } from "../enum/enumLikeStatus";
+import { CommentLikesDBType } from "../models/comment_likes/CommentLikesDBModel";
 
 
  
@@ -82,10 +84,23 @@ const CommentSchema = new mongoose.Schema<CommentType>({
         userId: {type: String, required: true},
         userLogin: {type: String, required: true}
     }},
-    createdAt: {type: String, required: true}
+    createdAt: {type: String, required: true},
+    likesInfo: {type: {
+        likesCount: {type: Number, default: 0},
+        dislikesCount: {type: Number, default: 0},
+        myStatus: {type: String, default: LIKE_STATUS.NONE}
+    }}
 })
 
 export const CommentModel = mongoose.model('comments', CommentSchema)
+
+const CommentLikesSchema = new mongoose.Schema<CommentLikesDBType>({
+    commentId: {type: String, required: true},
+    userId: {type: String, required: true},
+    status: {type: String, required: true}
+})
+
+export const CommentLikesModel = mongoose.model('comment-likes', CommentLikesSchema)
 
 const AuthSchema = new mongoose.Schema<AuthTokenType>({
     refreshToken: {type: String, required: true}

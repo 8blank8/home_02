@@ -12,8 +12,9 @@ export class CommentController {
 
     async getComments(req: Request, res: Response) {
         const id = req.params.id
+        const userId = req.user?.id
     
-        const comment = await this.commentsQueryRepository.findCommentById(id)
+        const comment = await this.commentsQueryRepository.findCommentById(id, userId)
     
         if(!comment) return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
     
@@ -31,9 +32,21 @@ export class CommentController {
     async updateComment(req: Request, res: Response) {
         const id = req.params.id
         const content = req.body.content
-    
+        
         await this.commentsService.updateComment(id, content)
     
         return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+    }
+
+    async updateLikeStatusComment(req: Request, res: Response){
+        const id = req.params.id
+        const likeStatus = req.body.likeStatus
+        const userId = req.user!.id
+
+        const isUpdate = await this.commentsService.updateLikeStatus(id, likeStatus, userId)
+        if(!isUpdate) return res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+ 
+        return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+
     }
 }

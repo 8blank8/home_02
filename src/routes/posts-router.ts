@@ -4,6 +4,7 @@ import { validationCreateOrUpdatePostAll } from "../validations/validations-post
 import { authMiddleware } from "../middlewares/authMiddlewares";
 import { validationComment } from "../validations/validations-comments";
 import { postController } from "../composition-root/composition-root";
+import { getUserMiddleware } from "../middlewares/get-user-middleware";
 
 
 export const postsRouter = Router({}) 
@@ -46,6 +47,7 @@ postsRouter.post(
 )
 
 postsRouter.get(
-    '/:id/comments', 
+    '/:id/comments',
+    getUserMiddleware, 
     postController.getCommentByPostId.bind(postController)
 )

@@ -1,6 +1,8 @@
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { body } from "express-validator";
-import { usersQueryRepository } from "../repositories/users-query-repository";
+import { UsersQueryRepository } from "../repositories/users-query-repository";
+
+const usersQueryRepository = new UsersQueryRepository()
 
 export const validationAuth = [
     body('loginOrEmail')

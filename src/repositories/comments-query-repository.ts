@@ -1,5 +1,6 @@
-import { CommentModel } from "../db/db"
+import { CommentLikesModel, CommentModel } from "../db/db"
 import { DEFAULT_QUERY } from "../enum/enumDefaultQuery"
+import { LIKE_STATUS } from "../enum/enumLikeStatus"
 import { CommentFindType } from "../models/comment_models/CommentFindModel"
 import { CommentType } from "../models/comment_models/CommentModel"
 import { CommentViewType } from "../models/comment_models/CommentViewModel"
@@ -7,15 +8,16 @@ import { Sort } from "../models/post_models/PostAndBlogSortModel"
 
 
 export class CommentsQueryRepository {
-    async findCommentById(id: string){
+
+    async findCommentById(id: string, userId: string | undefined){
         const comment = await CommentModel.findOne({id})
         
         if(!comment) return null
 
-        return this._mapComment(comment)
+        return await this._mapComment(comment, userId)
     }
 
-    async findComments(id: string, option: CommentFindType){
+    async findComments(id: string, option: CommentFindType, userId: string | undefined){
 
         const filter: any = {}
 
@@ -44,11 +46,13 @@ export class CommentsQueryRepository {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: postCount,
-            items: comments.map(this._mapComment)
+            items: comments.map(async item => await this._mapComment(item, userId))
         }
     }
 
-    _mapComment(comment: CommentType): CommentViewType{
+    async _mapComment(comment: CommentType, userId: string | undefined){
+        let likeStatus: string | null = userId ? await CommentLikesModel.findOne({userId: userId, commentId: comment.id}) : LIKE_STATUS.NONE
+
         return {
             id: comment.id,
             content: comment.content,
@@ -56,7 +60,13 @@ export class CommentsQueryRepository {
                 userId: comment.commentatorInfo.userId,
                 userLogin: comment.commentatorInfo.userLogin
             },
-            createdAt: comment.createdAt
+            createdAt: comment.createdAt,
+            likesInfo: {
+                likesCount: await CommentLikesModel.countDocuments({commentId: comment.id, status: LIKE_STATUS.LIKE}),
+                dislikesCount: await CommentLikesModel.countDocuments({commentId: comment.id, status: LIKE_STATUS.DISLIKE}),
+                myStatus: likeStatus
+            }
+            
         }
     }
 }
