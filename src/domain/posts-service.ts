@@ -4,12 +4,15 @@ import { PostUpdateType } from "../models/post_models/PostUpdateModel"
 
 import { PostsRepository } from "../repositories/posts-repository"
 import { BlogsRepository } from "../repositories/blogs-repository"
+import { inject, injectable } from "inversify"
 
+
+@injectable()
 export class PostsService {
 
     constructor(
-        protected blogsRepository: BlogsRepository,
-        protected postsRepository: PostsRepository
+        @inject(BlogsRepository) protected blogsRepository: BlogsRepository,
+        @inject(PostsRepository) protected postsRepository: PostsRepository
     ){}
 
     async createPost(post: PostCreate){

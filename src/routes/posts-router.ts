@@ -3,9 +3,12 @@ import { autorizationMiddleware } from "../middlewares/authorization-middleware"
 import { validationCreateOrUpdatePostAll } from "../validations/validations-posts";
 import { authMiddleware } from "../middlewares/authMiddlewares";
 import { validationComment } from "../validations/validations-comments";
-import { postController } from "../composition-root/composition-root";
 import { getUserMiddleware } from "../middlewares/get-user-middleware";
+import { container } from "../composition-root/composition-root";
+import { PostController } from "../controllers/posts-controller";
 
+
+const postController = container.resolve(PostController)
 
 export const postsRouter = Router({}) 
 

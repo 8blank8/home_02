@@ -6,13 +6,15 @@ import { AuthService } from "../domain/auth-service";
 import { UsersService } from "../domain/users-service";
 
 import { UsersQueryRepository } from "../repositories/users-query-repository";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class UserController {
 
     constructor(
-        protected authService: AuthService,
-        protected usersService: UsersService,
-        protected usersQueryRepository: UsersQueryRepository
+        @inject(AuthService) protected authService: AuthService,
+        @inject(UsersService) protected usersService: UsersService,
+        @inject(UsersQueryRepository) protected usersQueryRepository: UsersQueryRepository
     ){}
 
     async createUser(req: Request, res: Response) {

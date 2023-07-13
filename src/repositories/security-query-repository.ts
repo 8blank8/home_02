@@ -1,7 +1,9 @@
+import { injectable } from "inversify"
 import { DeviceModel } from "../db/db"
 import { DeviceDbType } from "../models/security/deviceDbModel"
 
 
+@injectable()
 export class SecurityQueryRepository {
     async findDevice(userId: string){
         const device = await DeviceModel.find({userId: userId}).lean()

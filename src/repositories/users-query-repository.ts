@@ -2,8 +2,10 @@ import { UserFindType } from "../models/user_models/UserFindModel";
 import { UserModel } from "../db/db";
 import { UserType } from "../models/user_models/UserModel";
 import { UserViewType } from "../models/user_models/UserViewModel";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class UsersQueryRepository {
     async findUsers(option: UserFindType){
 

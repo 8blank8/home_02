@@ -4,16 +4,18 @@ import { BlogsRepository } from "../repositories/blogs-repository";
 import { UsersRepository } from "../repositories/users-repository";
 import { CommentsRepository } from "../repositories/commets-repository";
 import { SecurityRepository } from "../repositories/security-respository";
+import { inject, injectable } from "inversify";
 
 
+@injectable()
 export class TestingController {
 
     constructor(
-        protected postsRepository: PostsRepository,
-        protected blogsRepository: BlogsRepository,
-        protected usersRepository: UsersRepository,
-        protected commentsRepository: CommentsRepository,
-        protected securityRepository: SecurityRepository
+        @inject(PostsRepository) protected postsRepository: PostsRepository,
+        @inject(BlogsRepository) protected blogsRepository: BlogsRepository,
+        @inject(UsersRepository) protected usersRepository: UsersRepository,
+        @inject(CommentsRepository) protected commentsRepository: CommentsRepository,
+        @inject(SecurityRepository) protected securityRepository: SecurityRepository
     ){}
 
     async deleteAllData(req: Request, res: Response) {

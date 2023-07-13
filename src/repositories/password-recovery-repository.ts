@@ -1,7 +1,8 @@
+import { injectable } from "inversify";
 import { PasswordRecoveryModel } from "../db/db";
 import { AuthPasswordRecoveryType } from "../models/auth_models/AuthPasswordRecovery";
 
-
+@injectable()
 export class PasswordRecoveryRepository {
     async createPasswordRecoveryCode(data: AuthPasswordRecoveryType){
         return await PasswordRecoveryModel.insertMany(data)

@@ -1,3 +1,6 @@
+import 'reflect-metadata'
+import { Container } from 'inversify';
+
 import { JwtService } from "../application/jwt-service";
 import { AuthController } from "../controllers/auth-controller";
 import { BlogController } from "../controllers/blogs-controller";
@@ -28,36 +31,74 @@ import { TestingController } from "../controllers/testing-controller";
 import { CommentLikesRepository } from "../repositories/comment-likes-repository";
 
 
-const usersQueryRepository = new UsersQueryRepository()
-const securityQueryRepository = new SecurityQueryRepository()
-const postsQueryRepository = new PostsQueryRepository()
-const blogsQueryRepository = new BlogsQueryRepository()
-const commentsQueryRepository = new CommentsQueryRepository()
+// const usersQueryRepository = new UsersQueryRepository()
+// const securityQueryRepository = new SecurityQueryRepository()
+// const postsQueryRepository = new PostsQueryRepository()
+// const blogsQueryRepository = new BlogsQueryRepository()
+// const commentsQueryRepository = new CommentsQueryRepository()
 
-const passwordRecoveryRepository = new PasswordRecoveryRepository()
-const usersRepository = new UsersRepository()
-const authRepository = new AuthRepository()
-const securityRepository = new SecurityRepository()
-const blogsRepository = new BlogsRepository()
-const postsRepository = new PostsRepository()
-const commentsRepository = new CommentsRepository()
-const commentLikesRepository = new CommentLikesRepository()
+// const passwordRecoveryRepository = new PasswordRecoveryRepository()
+// const usersRepository = new UsersRepository()
+// const authRepository = new AuthRepository()
+// const securityRepository = new SecurityRepository()
+// const blogsRepository = new BlogsRepository()
+// const postsRepository = new PostsRepository()
+// const commentsRepository = new CommentsRepository()
+// const commentLikesRepository = new CommentLikesRepository()
 
-const emailService = new EmailService()
-const usersService = new UsersService(usersRepository)
-const commentsService = new CommentsService(commentsRepository, commentLikesRepository)
-const blogsService = new BlogsService(blogsRepository)
-const postsService = new PostsService(blogsRepository, postsRepository)
-const authService = new AuthService(passwordRecoveryRepository, usersRepository, usersQueryRepository, usersService, emailService) 
-export const jwtService = new JwtService(authRepository, usersQueryRepository)
-const securityService = new SecurityService(jwtService, securityRepository, securityQueryRepository)
+// const emailService = new EmailService()
+// const usersService = new UsersService(usersRepository)
+// const commentsService = new CommentsService(commentsRepository, commentLikesRepository)
+// const blogsService = new BlogsService(blogsRepository)
+// const postsService = new PostsService(blogsRepository, postsRepository)
+// const authService = new AuthService(passwordRecoveryRepository, usersRepository, usersQueryRepository, usersService, emailService) 
+// export const jwtService = new JwtService(authRepository, usersQueryRepository)
+// const securityService = new SecurityService(jwtService, securityRepository, securityQueryRepository)
 
 
-export const authController = new AuthController(jwtService, authService, securityService)
-export const blogController = new BlogController(blogsService, postsService, postsQueryRepository, blogsQueryRepository)
-export const commentController = new CommentController(commentsService, commentsQueryRepository)
-export const postController = new PostController(postsService, commentsService, commentsQueryRepository, postsQueryRepository)
-export const securityController = new SecurityController(jwtService, securityService, securityQueryRepository)
-export const userController = new UserController(authService, usersService, usersQueryRepository)
+// export const authController = new AuthController(jwtService, authService, securityService)
+// export const blogController = new BlogController(blogsService, postsService, postsQueryRepository, blogsQueryRepository)
+// export const commentController = new CommentController(commentsService, commentsQueryRepository)
+// export const postController = new PostController(postsService, commentsService, commentsQueryRepository, postsQueryRepository)
+// export const securityController = new SecurityController(jwtService, securityService, securityQueryRepository)
+// export const userController = new UserController(authService, usersService, usersQueryRepository)
 
-export const testingController = new TestingController(postsRepository, blogsRepository, usersRepository, commentsRepository, securityRepository)
+// export const testingController = new TestingController(postsRepository, blogsRepository, usersRepository, commentsRepository, securityRepository)
+
+export const container = new Container()
+
+container.bind(UsersQueryRepository).to(UsersQueryRepository)
+container.bind(SecurityQueryRepository).to(SecurityQueryRepository)
+container.bind(PostsQueryRepository).to(PostsQueryRepository)
+container.bind(BlogsQueryRepository).to(BlogsQueryRepository)
+container.bind(CommentsQueryRepository).to(CommentsQueryRepository)
+
+container.bind(PasswordRecoveryRepository).to(PasswordRecoveryRepository)
+container.bind(UsersRepository).to(UsersRepository)
+container.bind(AuthRepository).to(AuthRepository)
+container.bind(SecurityRepository).to(SecurityRepository)
+container.bind(BlogsRepository).to(BlogsRepository)
+container.bind(PostsRepository).to(PostsRepository)
+container.bind(CommentsRepository).to(CommentsRepository)
+container.bind(CommentLikesRepository).to(CommentLikesRepository)
+
+container.bind(EmailService).to(EmailService)
+container.bind(UsersService).to(UsersService)
+container.bind(CommentsService).to(CommentsService)
+container.bind(BlogsService).to(BlogsService)
+container.bind(PostsService).to(PostsService)
+container.bind(AuthService).to(AuthService)
+container.bind(JwtService).to(JwtService)
+container.bind(SecurityService).to(SecurityService)
+
+container.bind(AuthController).to(AuthController)
+container.bind(BlogController).to(BlogController)
+container.bind(CommentController).to(CommentController)
+container.bind(PostController).to(PostController)
+container.bind(SecurityController).to(SecurityController)
+container.bind(UserController).to(UserController)
+
+container.bind(TestingController).to(TestingController)
+
+
+

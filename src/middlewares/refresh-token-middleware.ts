@@ -1,9 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { STATUS_CODE } from "../enum/enumStatusCode";
 import { AuthRepository } from "../repositories/auth-repository";
-import { jwtService } from "../composition-root/composition-root";
+import { container } from "../composition-root/composition-root";
+import { JwtService } from "../application/jwt-service";
 
 export const refreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const jwtService = container.resolve(JwtService)
+
     const authRepository = new AuthRepository()
 
     const refreshTokenCookie = req.cookies.refreshToken

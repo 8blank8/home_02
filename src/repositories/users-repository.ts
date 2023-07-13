@@ -1,7 +1,9 @@
 import { UserType } from "../models/user_models/UserModel";
 import { UserModel } from "../db/db";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class UsersRepository {
     async createUser(user: UserType){
        return await UserModel.insertMany(user)

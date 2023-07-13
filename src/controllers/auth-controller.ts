@@ -5,13 +5,15 @@ import { v4 as uuidv4 } from "uuid";
 import { JwtService } from "../application/jwt-service";
 import { AuthService } from "../domain/auth-service";
 import { SecurityService } from "../domain/security-service";
+import { injectable, inject } from "inversify";
 
+@injectable()
 export class AuthController {
 
     constructor(
-        protected jwtService: JwtService,
-        protected authService: AuthService,
-        protected securityService: SecurityService
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(AuthService) protected authService: AuthService,
+        @inject(SecurityService) protected securityService: SecurityService
     ){}
 
     async authLogin(req: Request, res: Response){

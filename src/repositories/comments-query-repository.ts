@@ -5,8 +5,9 @@ import { CommentFindType } from "../models/comment_models/CommentFindModel"
 import { CommentType } from "../models/comment_models/CommentModel"
 import { CommentViewType } from "../models/comment_models/CommentViewModel"
 import { Sort } from "../models/post_models/PostAndBlogSortModel"
+import { injectable } from "inversify"
 
-
+@injectable()
 export class CommentsQueryRepository {
 
     async findCommentById(id: string, userId: string | undefined){

@@ -1,9 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { STATUS_CODE } from "../enum/enumStatusCode";
-import { jwtService } from "../composition-root/composition-root";
+import { container } from "../composition-root/composition-root";
+import { JwtService } from "../application/jwt-service";
 
 
 export const getUserMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const jwtService = container.resolve(JwtService)
+
     const auth = req.headers.authorization
     if(!auth) return next()
 

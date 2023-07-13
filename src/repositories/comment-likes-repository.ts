@@ -1,7 +1,9 @@
+import { injectable } from "inversify"
 import { CommentLikesModel } from "../db/db"
-import { LIKE_STATUS } from "../enum/enumLikeStatus"
 import { CommentLikesDBType } from "../models/comment_likes/CommentLikesDBModel"
 
+
+@injectable()
 export class CommentLikesRepository {
 
     async getMyStatusLike(userId: string, commentId: string){

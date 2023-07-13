@@ -1,3 +1,4 @@
+import { inject, injectable } from "inversify"
 import { LIKE_STATUS } from "../enum/enumLikeStatus"
 import { CommentLikesDBType } from "../models/comment_likes/CommentLikesDBModel"
 import { CommentCreateType } from "../models/comment_models/CommentCreateModel"
@@ -6,11 +7,13 @@ import { CommentLikesRepository } from "../repositories/comment-likes-repository
 
 import { CommentsRepository } from "../repositories/commets-repository"
 
+
+@injectable()
 export class CommentsService {
     
     constructor(
-        protected commentsRepository: CommentsRepository,
-        protected commentLikesRepository: CommentLikesRepository
+        @inject(CommentsRepository) protected commentsRepository: CommentsRepository,
+        @inject(CommentLikesRepository) protected commentLikesRepository: CommentLikesRepository
         ){}
 
     async createComment(comment: CommentCreateType){

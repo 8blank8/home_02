@@ -1,7 +1,8 @@
+import { injectable } from "inversify";
 import { CommentModel } from "../db/db";
 import { CommentType } from "../models/comment_models/CommentModel";
 
-
+@injectable()
 export class CommentsRepository {
     async createComment(comment: CommentType){
         await CommentModel.insertMany(comment)

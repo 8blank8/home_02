@@ -1,8 +1,10 @@
 import { PostUpdateType } from "../models/post_models/PostUpdateModel"
 import { PostModel } from "../db/db"
 import { PostCreateForDBType } from "../models/post_models/PostCreateForDBModel"
+import { injectable } from "inversify"
 
 
+@injectable()
 export class PostsRepository {
 
     async createPost(post: PostCreateForDBType){

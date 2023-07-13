@@ -7,14 +7,17 @@ import { CommentsService } from "../domain/comments-service";
 
 import { PostsQueryRepository } from "../repositories/posts-query-repository";
 import { CommentsQueryRepository } from "../repositories/comments-query-repository";
+import { inject, injectable } from "inversify";
 
+
+@injectable()
 export class PostController {
 
     constructor(
-        protected postsService: PostsService,
-        protected commentsService: CommentsService,
-        protected commentsQueryRepository: CommentsQueryRepository,
-        protected postsQueryRepository: PostsQueryRepository
+        @inject(PostsService) protected postsService: PostsService,
+        @inject(CommentsService) protected commentsService: CommentsService,
+        @inject(CommentsQueryRepository) protected commentsQueryRepository: CommentsQueryRepository,
+        @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository
     ){}
 
     async getPosts(req: Request, res: Response) {

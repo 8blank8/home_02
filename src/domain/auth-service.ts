@@ -12,17 +12,18 @@ import { EmailService } from "./email-service"
 import { PasswordRecoveryRepository } from "../repositories/password-recovery-repository"
 import { UsersRepository } from "../repositories/users-repository"
 import { UsersQueryRepository } from "../repositories/users-query-repository"
+import { inject, injectable } from "inversify"
 
 
-
+@injectable()
 export class AuthService {
     
     constructor(
-        protected passwordRecoveryRepository: PasswordRecoveryRepository,
-        protected usersRepository: UsersRepository,
-        protected usersQueryRepository: UsersQueryRepository,
-        protected usersService: UsersService,
-        protected emailService: EmailService
+        @inject(PasswordRecoveryRepository) protected passwordRecoveryRepository: PasswordRecoveryRepository,
+        @inject(UsersRepository) protected usersRepository: UsersRepository,
+        @inject(UsersQueryRepository) protected usersQueryRepository: UsersQueryRepository,
+        @inject(UsersService) protected usersService: UsersService,
+        @inject(EmailService) protected emailService: EmailService
     ){}
 
     async createUser(user: UserCreateType, isSuperAdmin: boolean){

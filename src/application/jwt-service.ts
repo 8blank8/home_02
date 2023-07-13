@@ -3,12 +3,14 @@ import { settingEnv } from '../setting-env'
 import { AuthRepository } from '../repositories/auth-repository'
 import { UsersQueryRepository } from '../repositories/users-query-repository'
 import { AuthTokenType } from '../models/auth_models/AuthModel'
+import { inject, injectable } from 'inversify'
 
+@injectable()
 export class JwtService {
 
     constructor(
-        protected authRepository: AuthRepository, 
-        protected usersQueryRepository: UsersQueryRepository
+        @inject(AuthRepository) protected authRepository: AuthRepository, 
+        @inject(UsersQueryRepository) protected usersQueryRepository: UsersQueryRepository
     ){}
 
     async createAccessToken(userId: string) {

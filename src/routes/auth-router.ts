@@ -6,8 +6,11 @@ import { refreshTokenMiddleware } from "../middlewares/refresh-token-middleware"
 import { rateLimitMiddleware } from "../middlewares/rate-limit-middleware";
 import { validationEmail, validationPassword } from "../validations/validation-password-recovery";
 import { validationRecoveryCode } from "../validations/validation-recovery-code";
-import { authController } from "../composition-root/composition-root";
+import { container } from "../composition-root/composition-root";
+import { AuthController } from "../controllers/auth-controller";
 
+
+const authController = container.resolve(AuthController)
 
 export const authRouter = Router({})
 

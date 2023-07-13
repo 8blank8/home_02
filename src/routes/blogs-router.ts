@@ -2,8 +2,10 @@ import { Router } from "express";
 import { validationCreateOrUpdateBlog } from "../validations/validations-blogs";
 import { autorizationMiddleware } from "../middlewares/authorization-middleware";
 import { validationCreateOrUpdatePostById } from "../validations/validations-posts";
-import { blogController } from "../composition-root/composition-root";
+import { container } from "../composition-root/composition-root";
+import { BlogController } from "../controllers/blogs-controller";
 
+const blogController = container.resolve(BlogController)
 
 export const blogsRouter = Router({})
 

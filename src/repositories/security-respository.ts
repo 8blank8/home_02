@@ -1,8 +1,10 @@
+import { injectable } from "inversify";
 import { DeviceModel } from "../db/db";
 import { DeviceDateType } from "../models/security/deviceDateModel";
 import { DeviceDbType } from "../models/security/deviceDbModel";
 
 
+@injectable()
 export class SecurityRepository {
     async postDevice(device: DeviceDbType){
         return await DeviceModel.insertMany(device)

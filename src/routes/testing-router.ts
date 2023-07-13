@@ -1,6 +1,9 @@
 import { Router } from "express";
-import { testingController } from "../composition-root/composition-root";
+import { container } from "../composition-root/composition-root";
+import { TestingController } from "../controllers/testing-controller";
 
+
+const testingController = container.resolve(TestingController)
 
 export const testingRouter = Router({})
 

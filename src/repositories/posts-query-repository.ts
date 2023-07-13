@@ -1,3 +1,4 @@
+import { injectable } from "inversify"
 import { PostModel } from "../db/db"
 import { PostFindType } from "../models/post_models/PostFindModel"
 
@@ -6,6 +7,7 @@ const optionsCollection = {
     projection: {_id: 0}
 } 
 
+@injectable()
 export class PostsQueryRepository {
     async findPosts(option: PostFindType, id?: string){
 

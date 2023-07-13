@@ -2,12 +2,15 @@ import { Request, Response } from "express";
 import { STATUS_CODE } from "../enum/enumStatusCode";
 import { CommentsService } from "../domain/comments-service";
 import { CommentsQueryRepository } from "../repositories/comments-query-repository";
+import { inject, injectable } from "inversify";
 
+
+@injectable()
 export class CommentController {
     
     constructor(
-        protected commentsService: CommentsService,
-        protected commentsQueryRepository: CommentsQueryRepository
+        @inject(CommentsService) protected commentsService: CommentsService,
+        @inject(CommentsQueryRepository) protected commentsQueryRepository: CommentsQueryRepository
     ){}
 
     async getComments(req: Request, res: Response) {

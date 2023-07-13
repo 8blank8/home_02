@@ -3,11 +3,13 @@ import { BlogCrateType } from "../models/blog_models/BlogCreateModel";
 import { BlogUpdateType } from "../models/blog_models/BlogUpdateModel";
 
 import { BlogsRepository } from "../repositories/blogs-repository";
+import { inject, injectable } from "inversify";
 
 
+@injectable()
 export class BlogsService {
     
-    constructor(protected blogsRepository: BlogsRepository){}
+    constructor(@inject(BlogsRepository) protected blogsRepository: BlogsRepository){}
 
     async createBlog(blog: BlogCrateType){
         const createdBlog: BlogsType = {

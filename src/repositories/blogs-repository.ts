@@ -1,12 +1,14 @@
 import { BlogCreateForDBType } from "../models/blog_models/BlogCreateForDBModel";
 import { BlogUpdateType } from "../models/blog_models/BlogUpdateModel";
 import { BlogModel } from "../db/db";
+import { injectable } from "inversify";
 
 
 const optionsCollection = {
     projection: {_id: 0}
 } 
 
+@injectable()
 export class BlogsRepository {
 
     async findBlogsById(id: string){

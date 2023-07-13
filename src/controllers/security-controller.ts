@@ -5,13 +5,16 @@ import { JwtService } from "../application/jwt-service";
 import { SecurityService } from "../domain/security-service";
 
 import { SecurityQueryRepository } from "../repositories/security-query-repository";
+import { inject, injectable } from "inversify";
 
+
+@injectable()
 export class SecurityController {
     
     constructor(
-        protected jwtService: JwtService,
-        protected securityService: SecurityService,
-        protected securityQueryRepository: SecurityQueryRepository
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(SecurityService) protected securityService: SecurityService,
+        @inject(SecurityQueryRepository) protected securityQueryRepository: SecurityQueryRepository
     ){}
     
     async getDevices(req: Request, res: Response) {

@@ -1,10 +1,13 @@
+import { injectable } from "inversify"
 import { BlogModel } from "../db/db"
 import { BlogFindType } from "../models/blog_models/BlogFindModel"
+
 
 const optionsCollection = {
     projection: {_id: 0}
 } 
 
+@injectable()
 export class BlogsQueryRepository {
     async findBlogs(option: BlogFindType){
 
